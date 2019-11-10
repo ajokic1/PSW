@@ -1,0 +1,111 @@
+User
+=====
+id              unsignedBigInteger
+email           String 
+password        String
+first_name      String
+last_name       String
+address         String
+city            String
+country         String
+phone_no        String
+insurance_no    String
+role            enum("patient", "admin")
+photo           String, nullable
+auth_token      String, 1000
+
+Clinic
+=======
+id              unsignedBigInteger
+name            String
+description     String, nullable
+photo           String, default(nophoto.jpg)
+address         String
+city            String
+country         String
+
+Clinic_rating
+==============
+id              unsignedBigInteger
+user_id         unsignedBigInteger
+clinic_id       unsignedBigInteger
+rating          Integer
+comment         String, nullable
+
+AppointmentType
+================
+id              unsignedBigInteger
+type            String
+name            String
+duration        Time
+
+Doctor_appointmentType
+========================
+id              unsignedBigInteger
+doctor_id       unsignedBigInteger
+apptype_id      unsignedBigInteger
+
+Doctor
+=======
+id              unsignedBigInteger
+first_name      String
+last_name       String
+photo           String, default('nophoto.jpg')
+
+Doctor_clinic
+==============
+id              unsignedBigInteger
+clinic_id       unsignedBigInteger
+doctor_id       unsignedBigInteger
+works_from      Time
+works_to        Time
+
+Appointment
+============
+id              unsignedBigInteger
+user_id         unsignedBigInteger
+doctor_id       unsignedBigInteger
+clinic_id       unsignedBigInteger
+apptype_id      unsignedBigInteger
+date            Date
+time            Time
+confirmed       Boolean, default(true)
+accepted        Boolean, default(false)
+
+Diagnosis
+==========
+id              unsignedBigInteger
+user_id         unsignedBigInteger
+doctor_id       unsignedBigInteger
+appointment_id  unsignedBigInteger
+condition_id    unsignedBigInteger
+details         String, nullable
+therapy         String, nullable
+
+Condition
+==========
+id              unsignedBigInteger
+name            String
+type            enum(acute, chronic)
+description     String, nullable
+sugg_therapy    String, nullable
+symptoms        String, nullable
+prognosis       String, nullable
+
+Doctor_rating
+==============
+id              unsignedBigInteger
+user_id         unsignedBigInteger
+doctor_id       unsignedBigInteger
+rating          Integer
+comment         String, nullable
+
+PredefAppoinment
+=================
+id              unsignedBigInteger
+doctor_id       unsignedBigInteger
+clinic_id       unsignedBigInteger
+apptype_id      unsignedBigInteger
+date            Date
+time            Time
+
