@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+//Matches all routes, front-end routing will be done in React
+Route::get('/{any?}', function () {
+    return view('app');
+})->where('any', '.*');
