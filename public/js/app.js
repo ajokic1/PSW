@@ -55236,6 +55236,14 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     encrypted: true
 // });
 
+var token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+} else {
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
+
 /***/ }),
 
 /***/ "./resources/js/components/App.js":
@@ -55266,9 +55274,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -55286,24 +55294,49 @@ var App =
 function (_Component) {
   _inherits(App, _Component);
 
-  function App() {
+  function App(props) {
+    var _this;
+
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(App).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
+    _this.state = {
+      user: {},
+      isLoggedIn: false
+    };
+    _this.authSuccess = _this.authSuccess.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(App, [{
+    key: "authSuccess",
+    value: function authSuccess(isSuccess, user) {
+      if (isSuccess) {
+        this.setState({
+          user: user,
+          isLoggedIn: true
+        });
+        localStorage["user"] = JSON.stringify(user);
+      } else {
+        this.setState({
+          errorMessage: 'Došlo je do greške pri registraciji'
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["BrowserRouter"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_PrivateRoute__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        isLoggedIn: false,
+        isLoggedIn: this.state.isLoggedIn,
         exact: true,
         path: "/"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Home page")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_LoginRoute__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        isLoggedIn: false,
+        isLoggedIn: this.state.isLoggedIn,
         exact: true,
         path: "/register"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_Register__WEBPACK_IMPORTED_MODULE_5__["default"], null))));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_Register__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        authSuccess: this.authSuccess
+      }))));
     }
   }]);
 
@@ -55441,10 +55474,20 @@ function (_Component) {
     };
     _this.form = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(Register, [{
+    key: "handleSubmit",
+    value: function handleSubmit(event) {
+      event.preventDefault();
+
+      if (this.form.current.reportValidity()) {
+        this.register(event);
+      }
+    }
+  }, {
     key: "handleChange",
     value: function handleChange(event) {
       this.setState(_defineProperty({}, event.target.name, event.target.value));
@@ -55456,6 +55499,42 @@ function (_Component) {
           pogresanPass: false
         });
       }
+    }
+  }, {
+    key: "register",
+    value: function register(event) {
+      var _this2 = this;
+
+      var formData = new FormData();
+      formData.append("password", this.state.password);
+      formData.append("email", this.state.email);
+      formData.append("first_name", this.state.first_name);
+      formData.append("last_name", this.state.last_name);
+      formData.append("address", this.state.address);
+      formData.append("city", this.state.city);
+      formData.append("country", this.state.country);
+      formData.append("insurance_no", this.state.insurance_no);
+      formData.append("phone_no", this.state.phone_no);
+      this.setState({
+        registering: true
+      });
+      axios.post('api/register', formData).then(function (json) {
+        if (json.data.success) {
+          var user = {
+            first_name: json.data.data.first_name,
+            last_name: json.data.data.last_name,
+            id: json.data.data.id,
+            email: json.data.data.email,
+            auth_token: json.data.data.auth_token
+          };
+
+          _this2.props.authSuccess(true, user);
+        } else _this2.props.authSuccess(false);
+      })["catch"](function (error) {
+        console.log(error);
+
+        _this2.props.authSuccess(false);
+      });
     }
   }, {
     key: "render",
@@ -55543,6 +55622,8 @@ function (_Component) {
         required: true
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "invalid-feedback"
+      }, "Ponovite prethodno uneseni password."), this.state.pogresanPass && this.state.confirm_password && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "small text-danger"
       }, "Ponovite prethodno uneseni password."))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-sm-6"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -55617,10 +55698,11 @@ function (_Component) {
         className: "invalid-feedback"
       }, "Unesite jedinstveni broj osiguranika.")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "text-right form-group"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }, this.state.registering ? "Submitting..." : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "submit",
+        onClick: this.handleSubmit,
         className: "btn btn-primary mt-5",
-        value: "Registruj se"
+        value: "Registracija"
       }))))));
     }
   }]);

@@ -7,15 +7,31 @@ import LoginRoute from "./auth/LoginRoute";
 import Register from "./auth/Register";
 
 export default class App extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            user:{},
+            isLoggedIn:false,
+        }
+        this.authSuccess = this.authSuccess.bind(this);
+    }
+    authSuccess(isSuccess, user){
+        if(isSuccess){
+            this.setState({user: user, isLoggedIn: true});
+            localStorage["user"] = JSON.stringify(user);
+        } else {
+            this.setState({errorMessage: 'Došlo je do greške pri registraciji'});
+        }
+    }
     render() {
         return (
             <Router>
                 <Switch>
-                    <PrivateRoute isLoggedIn={false} exact path="/">
+                    <PrivateRoute isLoggedIn={this.state.isLoggedIn} exact path="/">
                         <div>Home page</div>
                     </PrivateRoute>                    
-                    <LoginRoute isLoggedIn={false} exact path="/register">
-                        <Register/>
+                    <LoginRoute isLoggedIn={this.state.isLoggedIn} exact path="/register">
+                        <Register authSuccess={this.authSuccess}/>
                     </LoginRoute>                    
                 </Switch>
             </Router>

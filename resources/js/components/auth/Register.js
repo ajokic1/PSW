@@ -19,6 +19,13 @@ export default class Register extends Component {
         }
         this.form = React.createRef();
         this.handleChange=this.handleChange.bind(this);
+        this.handleSubmit=this.handleSubmit.bind(this);
+    }
+    handleSubmit(event) {
+        event.preventDefault();
+        if(this.form.current.reportValidity()){
+            this.register(event);
+        }
     }
     handleChange(event) {
         this.setState({[event.target.name]: event.target.value});
@@ -29,6 +36,37 @@ export default class Register extends Component {
                 this.setState({pogresanPass: false});
 
         }
+    }
+    register(event) {        
+        let formData = new FormData(); 
+        formData.append("password", this.state.password);
+        formData.append("email", this.state.email);
+        formData.append("first_name", this.state.first_name);
+        formData.append("last_name", this.state.last_name);
+        formData.append("address", this.state.address);
+        formData.append("city", this.state.city);
+        formData.append("country", this.state.country);
+        formData.append("insurance_no", this.state.insurance_no);
+        formData.append("phone_no", this.state.phone_no);
+        this.setState({registering: true});
+
+        axios
+            .post('api/register', formData)
+            .then((json) => {
+                if(json.data.success) {
+                    let user = {
+                        first_name: json.data.data.first_name,
+                        last_name: json.data.data.last_name,
+                        id: json.data.data.id,
+                        email: json.data.data.email,
+                        auth_token: json.data.data.auth_token,
+                    };
+                    this.props.authSuccess(true, user);
+                } else this.props.authSuccess(false);
+            }).catch(error => {
+                console.log(error);
+                this.props.authSuccess(false);
+            });
     }
     render() {
         return (
@@ -71,6 +109,11 @@ export default class Register extends Component {
                                 <div className="invalid-feedback">
                                     Ponovite prethodno uneseni password.
                                 </div>
+                                {(this.state.pogresanPass && this.state.confirm_password) &&
+                                    <div className="small text-danger">
+                                        Ponovite prethodno uneseni password.
+                                    </div>
+                                }
                             </div>
                             
                         </div>
@@ -111,9 +154,10 @@ export default class Register extends Component {
                                 </div>
                             </div>    
                             <div className='text-right form-group'>
-                            <input type='submit' className='btn btn-primary mt-5' value='Registruj se'/>                            
-                            
-                            
+                            {this.state.registering 
+                                ? "Submitting..."
+                                : <input type='submit' onClick={this.handleSubmit} className='btn btn-primary mt-5' value='Registracija'/>
+                            }                          
                             </div>
                         </div>
                     </form>

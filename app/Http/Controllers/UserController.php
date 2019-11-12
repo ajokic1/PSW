@@ -43,22 +43,24 @@ class UserController extends Controller
     }
     public function register(Request $request)
     { 
-        $payload = [
-            'email'=>$request->email,
-            'password'=>\Hash::make($request->password),            
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'address'=>$request->address,
-            'city'=>$request->city,
-            'country'=>$request->country,
-            'phone_no'=>$request->phone_no,
-            'insurance_no'=>$request->insurance_no,
-            'role'=>$request->role,
-            'photo'=>$request->photo,
-            'auth_token'=> ''
-        ];
-                  
-        $user = new \App\User($payload);
+        $request->password = \Hash::make($request->password);
+        $request->role='patient';
+        $request->auth_token='';
+        $validated = $request->validate([
+            'email'=>'required|unique',
+            'password'=>'required',            
+            'first_name'=>'required',
+            'last_name'=>'required',
+            'address'=>'required',
+            'city'=>'required',
+            'country'=>'required',
+            'phone_no'=>'required',
+            'insurance_no'=>'required',
+            'role'=>'required',
+            'photo'=>'required',
+            'auth_token'=> 'nullable'
+        ]);          
+        $user = new \App\User($validated);
         if ($user->save())
         {
             
