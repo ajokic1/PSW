@@ -54,14 +54,7 @@ export default class Register extends Component {
             .post('api/register', formData)
             .then((json) => {
                 if(json.data.success) {
-                    let user = {
-                        first_name: json.data.data.first_name,
-                        last_name: json.data.data.last_name,
-                        id: json.data.data.id,
-                        email: json.data.data.email,
-                        auth_token: json.data.data.auth_token,
-                    };
-                    this.props.authSuccess(true, user);
+                    this.props.authSuccess(false, {}, true);
                 } else this.props.authSuccess(false);
             }).catch(error => {
                 console.log(error);

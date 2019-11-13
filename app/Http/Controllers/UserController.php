@@ -34,6 +34,9 @@ class UserController extends Controller
             $token = self::getToken($request->email, $request->password);
             $user->auth_token = $token;
             $user->save();
+            if($user->email_verified_at == NULL){
+                $response = ['success'=>false, 'emailNotVerified'=>true];
+            } else
             $response = ['success'=>true, 'data'=>$user];           
         }
         else 
@@ -43,12 +46,9 @@ class UserController extends Controller
     }
     public function register(Request $request)
     { 
-        $request->password = \Hash::make($request->password);
-        $request->role='patient';
-        $request->auth_token='';
         $validated = $request->validate([
-            'email'=>'required|unique',
-            'password'=>'required',            
+            'email'=>'required|unique:users',
+            'password'=>'nullable',            
             'first_name'=>'required',
             'last_name'=>'required',
             'address'=>'required',
@@ -56,10 +56,13 @@ class UserController extends Controller
             'country'=>'required',
             'phone_no'=>'required',
             'insurance_no'=>'required',
-            'role'=>'required',
-            'photo'=>'required',
+            'role'=>'nullable',
+            'photo'=>'nullable',
             'auth_token'=> 'nullable'
-        ]);          
+        ]);
+        $validated['password'] = \Hash::make($request->password);
+        $validated['role']='patient';
+        $validated['auth_token']='';          
         $user = new \App\User($validated);
         if ($user->save())
         {
@@ -72,9 +75,11 @@ class UserController extends Controller
             
             $user->auth_token = $token; // update user token
             
+            $user->sendApiEmailVerificationNotification();
+
             $user->save();
             
-            $response = ['success'=>true, 'data'=>$user];        
+            $response = ['success'=>true, 'emailNotVerified'=>true];        
         }
         else
             $response = ['success'=>false, 'data'=>'Couldnt register user'];

@@ -20,12 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => ['jwt.auth','api-header']], function () {
   
     // all routes to protected resources are registered here  
-    Route::get('users/list', function(){
-        $users = App\User::all();
-        
-        $response = ['success'=>true, 'data'=>$users];
-        return response()->json($response, 201);
-    });
+    Route::post('logout', 'UserController@logout');
+
 });
 
 Route::group(['middleware' => 'api-header'], function () {
@@ -35,4 +31,9 @@ Route::group(['middleware' => 'api-header'], function () {
     // Therefore the jwtMiddleware will be exclusive of them
     Route::post('login', 'UserController@login');
     Route::post('register', 'UserController@register');
+
+
+    Route::get('email/verify/{id}', 'ApiVerificationController@verify')->name('verificationapi.verify');
+
+    Route::get('email/resend', 'ApiVerificationController@resend')->name('verificationapi.resend');
 });
