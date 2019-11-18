@@ -8,6 +8,7 @@ import Register from "./auth/Register";
 import Login from "./auth/Login";
 import Verify from "./auth/Verify";
 import Logout from "./auth/Logout";
+import AuthControls from "./auth/AuthControls";
 
 export default class App extends Component {
     constructor(props){
@@ -55,7 +56,10 @@ export default class App extends Component {
     render() {
         return (
             <div>
-            {this.state.isLoggedIn && <button className='btn btn-primary' onClick={this.logout}>Log out</button>}
+            <AuthControls 
+                user={this.state.user} 
+                isLoggedIn={this.state.isLoggedIn}
+                logout={this.logout}/>
             {this.state.needsVerification
             ? <Verify/>
             : <Router>

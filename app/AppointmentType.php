@@ -17,6 +17,6 @@ class AppointmentType extends Model
     }
 
     public function predef_appointments() {
-        return $this->hasMany('App\PredefAppointment')
+        return $this->hasMany('App\PredefAppointment');
     }
 }

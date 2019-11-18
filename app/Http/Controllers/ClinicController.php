@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class ClinicController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+        $this->middleware('admin')->except(['index', 'show']);
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,9 @@ class ClinicController extends Controller
      */
     public function index()
     {
-        //
+        $clinics = Clinic::get(['id','name','photo','city']);
+        $clinics->load('appointment_types');
+        return $clinics;
     }
 
     /**
@@ -35,7 +42,16 @@ class ClinicController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name'=>'required',
+            'description'=>'nullable',
+            'photo'=>'nullable',
+            'address'=>'required',
+            'city'=>'required',
+            'country'=>'required',
+        ]);
+        Clinic::create($validated);
+        return response()->json(['success'=>true], 201);
     }
 
     /**
@@ -46,7 +62,7 @@ class ClinicController extends Controller
      */
     public function show(Clinic $clinic)
     {
-        //
+        return $clinic;
     }
 
     /**
@@ -69,7 +85,16 @@ class ClinicController extends Controller
      */
     public function update(Request $request, Clinic $clinic)
     {
-        //
+        $validated = $request->validate([
+            'name'=>'required',
+            'description'=>'nullable',
+            'photo'=>'nullable',
+            'address'=>'required',
+            'city'=>'required',
+            'country'=>'required',
+        ]);
+        $clinic->update($validated);
+        return response()->json(['success'=>true], 200);
     }
 
     /**
@@ -80,6 +105,7 @@ class ClinicController extends Controller
      */
     public function destroy(Clinic $clinic)
     {
-        //
+        $clinic->delete();
+        return response()->json(['success'=>true], 200);
     }
 }

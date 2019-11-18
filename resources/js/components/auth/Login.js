@@ -40,6 +40,7 @@ export default class Login extends Component {
                         id: json.data.data.id,
                         email: json.data.data.email,
                         auth_token: json.data.data.auth_token,
+                        role: json.data.data.role,
                     };
                     this.props.authSuccess(true, user);
                 } else if(json.data.emailNotVerified) this.props.authSuccess(false, {}, true);

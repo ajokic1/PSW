@@ -23,4 +23,15 @@ class Clinic extends Model
     public function predef_appointments() {
         return $this->hasMany('App\PredefAppointment');
     }
+
+    public function appointment_types() {
+        return $this->hasManyThrough(
+            'App\AppointmentType',
+            'App\ClinicDoctor',
+            'clinic_id',
+            'doctor_id',
+            'id',
+            'doctor_id'
+        );
+    }
 }

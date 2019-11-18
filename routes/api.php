@@ -22,6 +22,9 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
     // all routes to protected resources are registered here  
     Route::post('logout', 'UserController@logout');
 
+    Route::resource('clinics', 'ClinicController');
+    
+
 });
 
 Route::group(['middleware' => 'api-header'], function () {
