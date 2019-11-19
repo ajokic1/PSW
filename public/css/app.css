@@ -11100,3 +11100,25 @@ a.text-dark:focus {
   }
 }
 
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.bg-lightgray {
+  background-color: lightGray;
+}
+
+.text-lightgray {
+  color: lightGray;
+}
+
+.dark_hover:hover {
+  background-color: lightGray !important;
+}
+
