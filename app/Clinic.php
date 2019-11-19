@@ -3,10 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Clinic extends Model
 {
     protected $guarded=[];
+
+    protected $appends = ['appointment_types', 'doctor_ids'];
 
     public function clinic_ratings() {
         return $this->hasMany('App\ClinicRating');
@@ -24,14 +27,17 @@ class Clinic extends Model
         return $this->hasMany('App\PredefAppointment');
     }
 
-    public function appointment_types() {
-        return $this->hasManyThrough(
-            'App\AppointmentType',
-            'App\ClinicDoctor',
-            'clinic_id',
-            'doctor_id',
-            'id',
-            'doctor_id'
-        );
+    public function getDoctorIdsAttribute() {
+        return $this->doctors()->pluck('doctor_id')->toArray();
+    }
+    
+    public function getAppointmentTypesAttribute() {
+        $appointment_types = DB::table('appointment_type_doctor')
+            ->whereIn('doctor_id', $this->doctor_ids)
+            ->distinct()
+            ->pluck('appointment_type_id')
+            ->toArray();
+        return $appointment_types;
+
     }
 }

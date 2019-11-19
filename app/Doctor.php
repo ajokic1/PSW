@@ -15,7 +15,6 @@ class Doctor extends Model
     public function clinics() {
         return $this
             ->belongsToMany('App\Clinic')
-            ->using('App\ClinicDoctor')
             ->withPivot(['works_from', 'works_to']);
     }
 
