@@ -5,12 +5,13 @@ import AuthControls from '../auth/AuthControls';
 export default class Navbar extends Component {
     render() {
         return (
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav className="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
                 <a className="navbar-brand" href="#">Pregledaj.me</a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
+                    {this.props.isLoggedIn &&
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
                             <Link to='/'><div className="nav-link" href="#">Početna</div></Link>
@@ -20,6 +21,7 @@ export default class Navbar extends Component {
                         </li>
                         
                     </ul>
+                    }
                     <AuthControls 
                         user={this.props.user} 
                         isLoggedIn={this.props.isLoggedIn}

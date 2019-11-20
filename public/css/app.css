@@ -11100,6 +11100,12 @@ a.text-dark:focus {
   }
 }
 
+body,
+html,
+#root {
+  height: 100%;
+}
+
 .btn:focus,
 .btn:active:focus,
 .btn.active:focus,

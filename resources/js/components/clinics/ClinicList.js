@@ -7,7 +7,7 @@ export default class ClinicList extends Component {
             <ClinicCard clinic={clinic} key={clinic.id}/>
         );
         return (
-            <div className='d-flex'>
+            <div className='row p-3 overflow-auto'>
                 {clinicList}
             </div>
         );
