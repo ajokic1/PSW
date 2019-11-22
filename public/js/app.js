@@ -76388,6 +76388,7 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-12 m-0"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        onClick: this.props.onClick,
         className: "m-1 card bg-light dark_hover",
         style: {
           width: '100%',
@@ -76547,8 +76548,13 @@ function (_Component) {
   _createClass(ClinicList, [{
     key: "render",
     value: function render() {
+      var _this = this;
+
       var clinicList = this.props.clinics.map(function (clinic) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ClinicCard__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          onClick: function onClick() {
+            return _this.props.handleClick(clinic.id);
+          },
           clinic: clinic,
           key: clinic.id
         });
@@ -76560,6 +76566,96 @@ function (_Component) {
   }]);
 
   return ClinicList;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/clinics/ClinicOverlay.js":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/clinics/ClinicOverlay.js ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ClinicOverlay; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var ClinicOverlay =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(ClinicOverlay, _Component);
+
+  function ClinicOverlay(props) {
+    var _this;
+
+    _classCallCheck(this, ClinicOverlay);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ClinicOverlay).call(this, props));
+    _this.state = {
+      clinic: {}
+    };
+    return _this;
+  }
+
+  _createClass(ClinicOverlay, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      axios.get('/api/clinics/' + this.props.selectedClinic).then(function (json) {
+        _this2.setState({
+          clinic: json.data
+        });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "position-fixed dark-overlay w-100 h-100",
+        onClick: this.props.close
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "w-75 h-75 bg-white mx-auto mt-5 p-5 rounded"
+      }, this.state.clinic && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.state.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+        className: "mb-4"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-md-5"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        className: "img-fluid",
+        src: '/images/' + this.state.clinic.photo
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-md-7"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.address), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.city))))));
+    }
+  }]);
+
+  return ClinicOverlay;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 
@@ -76581,6 +76677,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ClinicList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ClinicList */ "./resources/js/components/clinics/ClinicList.js");
 /* harmony import */ var _partials_Sidebar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partials/Sidebar */ "./resources/js/components/partials/Sidebar.js");
 /* harmony import */ var _ClinicFilters__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ClinicFilters */ "./resources/js/components/clinics/ClinicFilters.js");
+/* harmony import */ var _ClinicOverlay__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ClinicOverlay */ "./resources/js/components/clinics/ClinicOverlay.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -76604,6 +76701,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var Clinics =
 /*#__PURE__*/
 function (_Component) {
@@ -76620,11 +76718,14 @@ function (_Component) {
       filteredClinics: [],
       appointmentTypes: [],
       appointmentTypeId: -1,
-      date: new Date()
+      date: new Date(),
+      selectedClinic: -1
     };
     _this.handleSelect = _this.handleSelect.bind(_assertThisInitialized(_this));
     _this.filterClinics = _this.filterClinics.bind(_assertThisInitialized(_this));
     _this.setDate = _this.setDate.bind(_assertThisInitialized(_this));
+    _this.closeOverlay = _this.closeOverlay.bind(_assertThisInitialized(_this));
+    _this.handleClinicClick = _this.handleClinicClick.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -76691,6 +76792,20 @@ function (_Component) {
       }
     }
   }, {
+    key: "closeOverlay",
+    value: function closeOverlay() {
+      this.setState({
+        selectedClinic: -1
+      });
+    }
+  }, {
+    key: "handleClinicClick",
+    value: function handleClinicClick(id) {
+      this.setState({
+        selectedClinic: id
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       this.filterClinics();
@@ -76706,8 +76821,12 @@ function (_Component) {
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "overflow-auto col-lg-9 col-md-8 col-sm-7 bg-white h-100"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ClinicList__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        handleClick: this.handleClinicClick,
         clinics: this.state.filteredClinics
-      })));
+      })), this.state.selectedClinic != -1 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ClinicOverlay__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        selectedClinic: this.state.selectedClinic,
+        close: this.closeOverlay
+      }));
     }
   }]);
 

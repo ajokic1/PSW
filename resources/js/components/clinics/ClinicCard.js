@@ -11,7 +11,7 @@ export default class ClinicCard extends Component {
         }
         return (
         <div className="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-12 m-0">
-        <div className="m-1 card bg-light dark_hover" style={{width: '100%', height: '22rem'}}>
+        <div onClick={this.props.onClick} className="m-1 card bg-light dark_hover" style={{width: '100%', height: '22rem'}}>
             <div style={photoStyle} className="card-img-top"/>
             <div className="card-body h-50">
                 <h5 className="card-title">{this.props.clinic.name}</h5>

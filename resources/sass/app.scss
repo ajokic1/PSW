@@ -13,10 +13,17 @@ body, html, #root {
 .bg-lightgray {
     background-color: lightGray;
 }
+.bg-white {
+    background-color: white;
+}
 .text-lightgray {
     color: lightGray;
 }
 
 .dark_hover:hover {
-  background-color: lightGray !important;
+    background-color: lightGray !important;
+}
+
+.dark-overlay {
+    background-color: rgba(0,0,0,0.8);
 }

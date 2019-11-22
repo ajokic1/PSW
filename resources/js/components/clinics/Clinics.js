@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ClinicList from './ClinicList';
 import Sidebar from '../partials/Sidebar';
 import ClinicFilters from './ClinicFilters';
+import ClinicOverlay from './ClinicOverlay';
 
 export default class Clinics extends Component {
     constructor(props) {
@@ -12,10 +13,13 @@ export default class Clinics extends Component {
             appointmentTypes: [],
             appointmentTypeId: -1,
             date: new Date(),
+            selectedClinic: -1,
         }
         this.handleSelect = this.handleSelect.bind(this);
         this.filterClinics = this.filterClinics.bind(this);
         this.setDate = this.setDate.bind(this);
+        this.closeOverlay = this.closeOverlay.bind(this);
+        this.handleClinicClick = this.handleClinicClick.bind(this);
     }
     componentDidMount() {
         axios
@@ -57,6 +61,12 @@ export default class Clinics extends Component {
                 filteredByAppType: this.state.appointmentTypeId}));
         }        
     }
+    closeOverlay() {
+        this.setState({selectedClinic: -1});
+    }
+    handleClinicClick(id) {
+        this.setState({selectedClinic: id});
+    }
     render() {
         this.filterClinics();
         return (
@@ -71,8 +81,12 @@ export default class Clinics extends Component {
                     </Sidebar>
                 </div>                
                 <div className='overflow-auto col-lg-9 col-md-8 col-sm-7 bg-white h-100'>
-                    <ClinicList clinics={this.state.filteredClinics}/>
+                    <ClinicList handleClick={this.handleClinicClick} clinics={this.state.filteredClinics}/>
                 </div>
+                {this.state.selectedClinic!=-1 && 
+                    <ClinicOverlay 
+                        selectedClinic={this.state.selectedClinic}
+                        close={this.closeOverlay}/>}
             </div>
         );
     }
