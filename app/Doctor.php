@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Doctor extends Model
 {
     protected $guarded=[];
+    
 
     public function appointment_types() {
         return $this->belongsToMany('App\AppointmentType');

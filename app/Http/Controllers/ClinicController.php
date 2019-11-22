@@ -20,7 +20,7 @@ class ClinicController extends Controller
     public function index()
     {
         $clinics = Clinic::get(['id','name','photo','address','city']);
-        return $clinics->toJson();
+        return $clinics;
     }
 
     /**

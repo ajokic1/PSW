@@ -23,6 +23,7 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
     Route::post('logout', 'UserController@logout');
 
     Route::resource('clinics', 'ClinicController');
+    Route::resource('appointment_types', 'AppointmentTypeController');
     
 
 });

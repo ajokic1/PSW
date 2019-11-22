@@ -14,7 +14,7 @@ class AppointmentTypeController extends Controller
      */
     public function index()
     {
-        //
+        return AppointmentType::get(['id','type','name','duration']);
     }
 
     /**
