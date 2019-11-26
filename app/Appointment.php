@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     protected $guarded=[];
+    protected $appends = ['time_from_to'];
 
     public function user() {
         return $this->belongsTo('App\User');
@@ -23,4 +24,5 @@ class Appointment extends Model
     public function appointment_type() {
         return $this->belongsTo('App\AppointmentType');
     }
+    
 }

@@ -8,6 +8,9 @@ import Register from "./auth/Register";
 import Login from "./auth/Login";
 import Verify from "./auth/Verify";
 import Logout from "./auth/Logout";
+import AuthControls from "./auth/AuthControls";
+import Clinics from "./clinics/Clinics";
+import Navbar from "./partials/Navbar";
 
 export default class App extends Component {
     constructor(props){
@@ -25,6 +28,8 @@ export default class App extends Component {
         if (user) {
             user=JSON.parse(user);
             this.setState({ isLoggedIn: true, user: user });
+            axios.defaults.headers.common['Authorization'] = 
+                'Bearer ' + user.auth_token;
         }
     }
     authSuccess(isSuccess, user, needsVerification){
@@ -34,6 +39,8 @@ export default class App extends Component {
         if(isSuccess){
             this.setState({user: user, isLoggedIn: true});
             localStorage["user"] = JSON.stringify(user);
+            axios.defaults.headers.common['Authorization'] = 
+                'Bearer ' + user.auth_token;
         } else {
             this.setState({errorMessage: 'Došlo je do greške pri registraciji'});
         }
@@ -42,7 +49,7 @@ export default class App extends Component {
         if(event) event.preventDefault();
         console.log('log out');
         axios
-            .post('/api/logout',{}, {headers: {'Authorization': 'Bearer '+this.state.user.auth_token}})
+            .post('/api/logout',{})
             .then(json =>{
                 console.log(json);
             });
@@ -54,22 +61,24 @@ export default class App extends Component {
     }
     render() {
         return (
-            <div>
-            {this.state.isLoggedIn && <button className='btn btn-primary' onClick={this.logout}>Log out</button>}
+            <div className='h-100' style={{paddingTop: '3.5rem'}}>
             {this.state.needsVerification
             ? <Verify/>
             : <Router>
+                <Navbar user={this.state.user} isLoggedIn={this.state.isLoggedIn} logout={this.logout}/>
                 <Switch>
-                    <PrivateRoute isLoggedIn={this.state.isLoggedIn} exact path="/">
-                        <div>Home page</div>
+                    <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/clinics">
+                        <Clinics />
                     </PrivateRoute>
-                    <PrivateRoute isLoggedIn={this.state.isLoggedIn} exact path="/logout">
-                        <Logout logout={this.logout}/>
+                    <PrivateRoute isLoggedIn={this.state.isLoggedIn} exact path="/">
+                        <div class='container py-4'>
+                            Home page
+                        </div>
                     </PrivateRoute>                    
-                    <LoginRoute isLoggedIn={this.state.isLoggedIn} exact path="/register">
+                    <LoginRoute isLoggedIn={this.state.isLoggedIn} path="/register">
                         <Register authSuccess={this.authSuccess}/>
                     </LoginRoute>
-                    <LoginRoute isLoggedIn={this.state.isLoggedIn} exact path="/login">
+                    <LoginRoute isLoggedIn={this.state.isLoggedIn} path="/login">
                         <Login authSuccess={this.authSuccess}/>
                     </LoginRoute>                 
                 </Switch>

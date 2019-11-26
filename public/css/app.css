@@ -11100,3 +11100,39 @@ a.text-dark:focus {
   }
 }
 
+body,
+html,
+#root {
+  height: 100%;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.bg-lightgray {
+  background-color: lightGray;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.text-lightgray {
+  color: lightGray;
+}
+
+.dark_hover:hover {
+  background-color: lightGray !important;
+}
+
+.dark-overlay {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
