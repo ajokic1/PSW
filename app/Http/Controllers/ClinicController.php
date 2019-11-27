@@ -19,7 +19,9 @@ class ClinicController extends Controller
      */
     public function index()
     {
-        $clinics = Clinic::get(['id','name','photo','address','city']);
+        $clinics = Clinic::get(['id','name','photo','address','city'])->map(function($clinic) {
+            return $clinic->append(['appointment_types', 'doctor_ids', 'appointments_from_duration']);
+        });
         return $clinics;
     }
 
@@ -61,6 +63,7 @@ class ClinicController extends Controller
      */
     public function show(Clinic $clinic)
     {
+        $clinic['doctors']=$clinic->doctors;
         return $clinic;
     }
 
