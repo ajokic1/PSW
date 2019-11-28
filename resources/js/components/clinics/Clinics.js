@@ -78,7 +78,12 @@ export default class Clinics extends Component {
                 </div>
                 <Route path='/clinics/:clinicId'>
                     <Overlay>
-                        <ClinicOverlay/>
+                        <ClinicOverlay 
+                            date={this.state.date} 
+                            setDate={this.setDate} 
+                            appointmentTypes={this.state.appointmentTypes} 
+                            appointmentTypeId={this.state.appointmentTypeId}
+                            handleChange={this.handleSelect}/>
                     </Overlay>
                 </Route>
             </div>

@@ -3,11 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Doctor extends Model
 {
     protected $guarded=[];
     protected $hidden=['created_at', 'updated_at'];
+    protected $appends=['rating', 'appointment_types'];
     
 
     public function appointment_types() {
@@ -26,5 +28,22 @@ class Doctor extends Model
 
     public function predef_appointments() {
         return $this->hasMany('App\PredefAppointment');
+    }
+    public function getAppointmentTypesAttribute() {
+        $appointment_types = DB::table('appointment_type_doctor')
+            ->where('doctor_id', $this->id)
+            ->distinct()
+            ->pluck('appointment_type_id')
+            ->toArray();
+        return $appointment_types;
+    }
+    public function getRatingAttribute() {
+        /*$avg_rating=0;
+        $ratings = $this->ratings;
+        $sum_ratings = $ratings->reduce(function($carry, $item){
+            return $carry + $item->rating;
+        });
+        return $sum_ratings / $ratings->count();*/
+        return 4;
     }
 }

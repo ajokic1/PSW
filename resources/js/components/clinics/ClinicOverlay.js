@@ -9,11 +9,14 @@ export default class ClinicOverlay extends Component {
         this.state={
             clinic: {},
             filteredDoctors: [],
-            doctorNameFilter: '',
-            doctorRatingFilter: '',
+            name: '',
+            rating: '',
+            needsFiltering: false,
         }
 
         this.filterDoctors = this.filterDoctors.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
     }
     componentDidMount() {
         axios.get('/api/clinics/'+this.props.match.params.clinicId)
@@ -21,20 +24,31 @@ export default class ClinicOverlay extends Component {
                 this.setState({clinic: json.data, filteredDoctors: json.data.doctors});
             });
     }
-    filterDoctors(event) {
-        if(event.target.name=='name'){
-            this.setState({doctorNameFilter: event.target.value});
-            console.log(event.target.value);
-            if(event.target.value!=''){
-                const filteredDoctors = this.state.clinic.doctors.filter(doctor => 
-                    (doctor.first_name + ' ' + doctor.last_name).toLowerCase()
-                    .includes(event.target.value.toLowerCase()));
-                this.setState({filteredDoctors: filteredDoctors});}
-            else this.setState({filteredDoctors: this.state.clinic.doctors});
+    handleChange(event) {
+        this.setState({[event.target.name]: event.target.value, needsFiltering: true});
+    }
+    handleSelect(...attributes) {
+        this.setState({needsFiltering: true});
+        this.props.handleChange(...attributes);
 
-        }
+    }
+    filterDoctors() {
+        if(this.state.clinic.doctors){
+            const filteredDoctors = this.state.clinic.doctors.filter(doctor => 
+            (this.state.name=='' || 
+                (doctor.first_name + ' ' + doctor.last_name).toLowerCase()
+                .includes(event.target.value.toLowerCase()))
+            && (this.props.appointmentTypeId==-1 || 
+                doctor.appointment_types.includes(this.props.appointmentTypeId))
+            && (this.state.rating=='' ||
+                doctor.rating >= this.state.rating)
+
+        );
+        this.setState({filteredDoctors: filteredDoctors, needsFiltering: false});    
+        }       
     }
     render() {
+        if(this.state.needsFiltering) this.filterDoctors();
         return (
                 <div className='w-75 bg-white mx-auto mt-5 p-5 rounded'>
                     {this.state.clinic 
@@ -54,9 +68,14 @@ export default class ClinicOverlay extends Component {
                             <h3>Ljekari</h3>
                             <hr className='mb-4'/>
                             <DoctorFilters 
-                                handleChange={this.filterDoctors} 
-                                name={this.state.doctorNameFilter}
-                                rating={this.state.doctorRatingFilter}/>
+                                handleChange={this.handleChange} 
+                                name={this.state.name}
+                                rating={this.state.rating}
+                                date={this.state.date} 
+                                setDate={this.setDate}
+                                handleSelect={this.handleSelect}
+                                appointmentTypes={this.props.appointmentTypes}
+                                appointmentTypeId={this.props.appointmentTypeId}/>
                             <DoctorList doctors={this.state.filteredDoctors}/>
                         </div>
                         : <Loading/>

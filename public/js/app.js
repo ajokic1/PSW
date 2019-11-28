@@ -76591,6 +76591,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _doctors_DoctorFilters__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../doctors/DoctorFilters */ "./resources/js/components/doctors/DoctorFilters.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -76626,10 +76628,13 @@ function (_Component) {
     _this.state = {
       clinic: {},
       filteredDoctors: [],
-      doctorNameFilter: '',
-      doctorRatingFilter: ''
+      name: '',
+      rating: '',
+      needsFiltering: false
     };
     _this.filterDoctors = _this.filterDoctors.bind(_assertThisInitialized(_this));
+    _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
+    _this.handleSelect = _this.handleSelect.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -76646,29 +76651,42 @@ function (_Component) {
       });
     }
   }, {
-    key: "filterDoctors",
-    value: function filterDoctors(event) {
-      if (event.target.name == 'name') {
-        this.setState({
-          doctorNameFilter: event.target.value
-        });
-        console.log(event.target.value);
+    key: "handleChange",
+    value: function handleChange(event) {
+      var _this$setState;
 
-        if (event.target.value != '') {
-          var filteredDoctors = this.state.clinic.doctors.filter(function (doctor) {
-            return (doctor.first_name + ' ' + doctor.last_name).toLowerCase().includes(event.target.value.toLowerCase());
-          });
-          this.setState({
-            filteredDoctors: filteredDoctors
-          });
-        } else this.setState({
-          filteredDoctors: this.state.clinic.doctors
+      this.setState((_this$setState = {}, _defineProperty(_this$setState, event.target.name, event.target.value), _defineProperty(_this$setState, "needsFiltering", true), _this$setState));
+    }
+  }, {
+    key: "handleSelect",
+    value: function handleSelect() {
+      var _this$props;
+
+      this.setState({
+        needsFiltering: true
+      });
+
+      (_this$props = this.props).handleChange.apply(_this$props, arguments);
+    }
+  }, {
+    key: "filterDoctors",
+    value: function filterDoctors() {
+      var _this3 = this;
+
+      if (this.state.clinic.doctors) {
+        var filteredDoctors = this.state.clinic.doctors.filter(function (doctor) {
+          return (_this3.state.name == '' || (doctor.first_name + ' ' + doctor.last_name).toLowerCase().includes(event.target.value.toLowerCase())) && (_this3.props.appointmentTypeId == -1 || doctor.appointment_types.includes(_this3.props.appointmentTypeId)) && (_this3.state.rating == '' || doctor.rating >= _this3.state.rating);
+        });
+        this.setState({
+          filteredDoctors: filteredDoctors,
+          needsFiltering: false
         });
       }
     }
   }, {
     key: "render",
     value: function render() {
+      if (this.state.needsFiltering) this.filterDoctors();
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "w-75 bg-white mx-auto mt-5 p-5 rounded"
       }, this.state.clinic ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.state.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
@@ -76685,9 +76703,14 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.address), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.city))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Ljekari"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
         className: "mb-4"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_doctors_DoctorFilters__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        handleChange: this.filterDoctors,
-        name: this.state.doctorNameFilter,
-        rating: this.state.doctorRatingFilter
+        handleChange: this.handleChange,
+        name: this.state.name,
+        rating: this.state.rating,
+        date: this.state.date,
+        setDate: this.setDate,
+        handleSelect: this.handleSelect,
+        appointmentTypes: this.props.appointmentTypes,
+        appointmentTypeId: this.props.appointmentTypeId
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_doctors_DoctorList__WEBPACK_IMPORTED_MODULE_1__["default"], {
         doctors: this.state.filteredDoctors
       })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Loading__WEBPACK_IMPORTED_MODULE_2__["default"], null));
@@ -76850,7 +76873,13 @@ function (_Component) {
         clinics: this.state.filteredClinics
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__["Route"], {
         path: "/clinics/:clinicId"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Overlay__WEBPACK_IMPORTED_MODULE_6__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ClinicOverlay__WEBPACK_IMPORTED_MODULE_4__["default"], null))));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Overlay__WEBPACK_IMPORTED_MODULE_6__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ClinicOverlay__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        date: this.state.date,
+        setDate: this.setDate,
+        appointmentTypes: this.state.appointmentTypes,
+        appointmentTypeId: this.state.appointmentTypeId,
+        handleChange: this.handleSelect
+      }))));
     }
   }]);
 
@@ -76957,6 +76986,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_select__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-select */ "./node_modules/react-select/dist/react-select.browser.esm.js");
+/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-datepicker */ "./node_modules/react-datepicker/dist/react-datepicker.min.js");
+/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_datepicker__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_datepicker_dist_react_datepicker_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-datepicker/dist/react-datepicker.css */ "./node_modules/react-datepicker/dist/react-datepicker.css");
+/* harmony import */ var react_datepicker_dist_react_datepicker_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_datepicker_dist_react_datepicker_css__WEBPACK_IMPORTED_MODULE_3__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -76978,6 +77011,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
+
 var DoctorFilters =
 /*#__PURE__*/
 function (_Component) {
@@ -76992,8 +77027,14 @@ function (_Component) {
   _createClass(DoctorFilters, [{
     key: "render",
     value: function render() {
+      var appTypes = this.props.appointmentTypes.map(function (appType) {
+        return {
+          value: appType.id,
+          label: appType.name
+        };
+      });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "row"
+        className: "row m-3"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-3"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -77005,7 +77046,7 @@ function (_Component) {
         onChange: this.props.handleChange,
         value: this.props.name
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-md-2"
+        className: "col-md-3"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "form-label"
       }, "Ocjena:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -77016,6 +77057,24 @@ function (_Component) {
         value: this.props.rating,
         min: "1",
         max: "5"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-md-3"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "form-label"
+      }, "Tip pregleda:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        isClearable: true,
+        value: this.props.appointmentTypeId,
+        name: "appointmentTypes",
+        options: appTypes,
+        onChange: this.props.handleSelect
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-md-3"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "form-label"
+      }, "Datum pregleda:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_datepicker__WEBPACK_IMPORTED_MODULE_2___default.a, {
+        selected: this.props.date,
+        onChange: this.props.setDate,
+        dateFormat: "dd.MM.yyyy"
       })));
     }
   }]);
