@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\DB;
 class Clinic extends Model
 {
     protected $guarded=[];
-
-    protected $appends = ['appointment_types', 'doctor_ids', 'appointments_from_duration'];
+    protected $hidden=['created_at', 'updated_at'];
+    
 
     public function clinic_ratings() {
         return $this->hasMany('App\ClinicRating');
