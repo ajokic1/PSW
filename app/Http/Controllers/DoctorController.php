@@ -90,9 +90,9 @@ class DoctorController extends Controller
         $date = strtotime($date, 0);
         $duration = strtotime($date, 0);
         $work_start = strtotime($clinic->doctors()
-            ->where('doctor_id', $doctor->id)->first()->pivot->works_from,0);
+            ->where('doctors.id', $doctor->id)->first()->pivot->works_from,0);
         $work_end = strtotime($clinic->doctors()
-            ->where('doctor_id', $doctor->id)->first()->pivot->works_to,0);
+            ->where('doctors.id', $doctor->id)->first()->pivot->works_to,0);
 
         $appointments = $clinic->appointments()
             ->where('doctor_id', $doctor->id)->get()->sortBy('time');

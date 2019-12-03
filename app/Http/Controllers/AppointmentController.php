@@ -45,6 +45,7 @@ class AppointmentController extends Controller
                 'date'=>'required',
                 'time'=>'required',
             ]);
+            $validated['token'] = str_random(16);
             if(Auth::id()!=$validated->user_id){
                 throw new Exception('Appointment user_id doesn\'t match id of logged in user');
             } else if(!isAvailable($validated)){
@@ -80,6 +81,15 @@ class AppointmentController extends Controller
             }
         }
         return true;
+    }
+
+    public function accept(Appointment $appointment, $token) {
+        if($appointment->token == $token){
+            $appointment->accepted = true;
+            event(new AppointmentAccepted($appointment));
+            return response('Appointment accepted',200);
+        }
+        return response('Invalid token', 400);
     }
 
     /**

@@ -26,8 +26,14 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
     Route::resource('appointment_types', 'AppointmentTypeController');
     Route::resource('appointments', 'AppointmentController');
     
-    Route::get('clinics/{clinic}/doctors/{doctor}/availability/{date}/{duration}', 
-        'DoctorController@availability');
+    //Route::get('clinics/{clinic}/doctors/{doctor}/availability/{date}/{duration}', 
+    //    'DoctorController@availability');
+
+    Route::get('availability/appointment_type/{appointment_type}/date/{date}',
+        'AvailabilityController@get');
+
+    Route::get('appointments/{appointment}/accept/{token}', 
+        'AppointmentController@accept');
     
 
 });
@@ -41,7 +47,9 @@ Route::group(['middleware' => 'api-header'], function () {
     Route::post('register', 'UserController@register');
 
 
-    Route::get('email/verify/{id}', 'ApiVerificationController@verify')->name('verificationapi.verify');
+    Route::get('email/verify/{id}', 'ApiVerificationController@verify')
+        ->name('verificationapi.verify');
 
-    Route::get('email/resend', 'ApiVerificationController@resend')->name('verificationapi.resend');
+    Route::get('email/resend', 'ApiVerificationController@resend')
+        ->name('verificationapi.resend');
 });
