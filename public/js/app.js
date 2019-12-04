@@ -76495,7 +76495,8 @@ function (_Component) {
       }, "Datum pregleda:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_datepicker__WEBPACK_IMPORTED_MODULE_2___default.a, {
         selected: this.props.date,
         onChange: this.props.setDate,
-        dateFormat: "dd.MM.yyyy"
+        dateFormat: "dd.MM.yyyy",
+        placeholderText: "Odaberi datum pregleda"
       })));
     }
   }]);
@@ -76712,7 +76713,9 @@ function (_Component) {
         appointmentTypes: this.props.appointmentTypes,
         appointmentTypeId: this.props.appointmentTypeId
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_doctors_DoctorList__WEBPACK_IMPORTED_MODULE_1__["default"], {
-        doctors: this.state.filteredDoctors
+        clinicId: this.state.clinic.id,
+        doctors: this.state.filteredDoctors,
+        availability: this.props.availability
       })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Loading__WEBPACK_IMPORTED_MODULE_2__["default"], null));
     }
   }]);
@@ -76784,7 +76787,9 @@ function (_Component) {
       filteredClinics: [],
       appointmentTypes: [],
       appointmentTypeId: -1,
-      date: new Date()
+      availability: [],
+      needsFiltering: false,
+      date: null
     };
     _this.handleSelect = _this.handleSelect.bind(_assertThisInitialized(_this));
     _this.filterClinics = _this.filterClinics.bind(_assertThisInitialized(_this));
@@ -76815,7 +76820,9 @@ function (_Component) {
       if (target.name == 'appointmentTypes') {
         if (target.action == 'select-option') {
           this.setState({
-            appointmentTypeId: selectedOption.value
+            appointmentTypeId: selectedOption.value,
+            date: null,
+            needsFiltering: true
           });
         }
 
@@ -76833,23 +76840,43 @@ function (_Component) {
   }, {
     key: "setDate",
     value: function setDate(date) {
+      var _this3 = this;
+
+      var formattedDate = new Date(date).toISOString().split('T')[0];
       this.setState({
         date: date
       });
+
+      if (this.state.appointmentTypeId != -1) {
+        axios.get('/api/availability/date/' + formattedDate).then(function (json) {
+          return _this3.setState({
+            availability: json.data,
+            needsFiltering: true
+          });
+        });
+      }
     }
   }, {
     key: "filterClinics",
     value: function filterClinics() {
-      var _this3 = this;
+      var _this4 = this;
 
-      if (this.state.clinics && this.state.filteredByAppType != this.state.appointmentTypeId && this.state.appointmentTypeId != -1) {
+      console.log(this.state.availability.length);
+
+      if (this.state.clinics && this.state.needsFiltering) {
+        var appointmentType = this.state.appointmentTypes.find(function (t) {
+          return t.id = _this4.state.appointmentTypeId;
+        });
         var filteredClinics = this.state.clinics.filter(function (clinic) {
-          return clinic.appointment_types.includes(_this3.state.appointmentTypeId);
+          return clinic.appointment_types.includes(_this4.state.appointmentTypeId) && (_this4.state.availability.length > 0 ? _this4.state.availability.some(function (a) {
+            return a.clinic_id == clinic.id && a.duration > appointmentType.duration;
+          }) : true);
         });
         this.setState(function (state, props) {
           return {
             filteredClinics: filteredClinics,
-            filteredByAppType: _this3.state.appointmentTypeId
+            needsFiltering: false,
+            filteredByAppType: _this4.state.appointmentTypeId
           };
         });
       }
@@ -76878,7 +76905,8 @@ function (_Component) {
         setDate: this.setDate,
         appointmentTypes: this.state.appointmentTypes,
         appointmentTypeId: this.state.appointmentTypeId,
-        handleChange: this.handleSelect
+        handleChange: this.handleSelect,
+        availability: this.state.availability
       }))));
     }
   }]);
@@ -76943,7 +76971,7 @@ function (_Component) {
         width: '100%'
       };
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-12 m-0"
+        className: "col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 m-0"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         onClick: this.props.onClick,
         className: "m-1 card bg-light dark_hover row",
@@ -76960,9 +76988,11 @@ function (_Component) {
         className: "card-title"
       }, this.props.doctor.first_name + ' ' + this.props.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-text"
-      }, "Radno vrijeme:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Slobodni termini:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-text"
-      }, this.props.doctor.pivot.works_from.substring(0, 5) + ' - ' + this.props.doctor.pivot.works_to.substring(0, 5)))));
+      }, this.props.availability.map(function (a) {
+        return a.time + '(' + a.duration + '), ';
+      })))));
     }
   }]);
 
@@ -77147,7 +77177,10 @@ function (_Component) {
               return _this.props.handleClick(doctor.id);
             },
             doctor: doctor,
-            key: doctor.id
+            key: doctor.id,
+            availability: _this.props.availability.filter(function (a) {
+              return a.doctor_id == doctor.id && a.clinic_id == _this.props.clinicId;
+            })
           });
         });
       } else {
