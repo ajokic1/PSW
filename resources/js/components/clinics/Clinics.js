@@ -60,7 +60,6 @@ export default class Clinics extends Component {
         }
     }
     filterClinics() {
-        console.log(this.state.availability.length);
         if(this.state.clinics 
             && this.state.needsFiltering){
             const appointmentType = this.state.appointmentTypes

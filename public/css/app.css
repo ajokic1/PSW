@@ -11142,6 +11142,20 @@ html,
   width: 100%;
 }
 
+.yeet_box {
+  color: white;
+  display: inline-block;
+  border-radius: 3px;
+  background-color: darkgray;
+  margin: 0.2rem;
+  padding: 0.4rem;
+}
+
+.yeet_box:hover {
+  cursor: pointer;
+  background-color: gray;
+}
+
 .lds-dual-ring {
   display: inline-block;
   width: 64px;

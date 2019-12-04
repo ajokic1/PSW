@@ -136,4 +136,15 @@ class AppointmentController extends Controller
     {
         //
     }
+
+    public function details(App\Doctor $doctor, App\Clinic $clinic, App\AppointmentType $appointment_type, $date) {
+        $data['doctor'] = $doctor;
+        $data['clinic'] = $clinic;
+        $data['appointment_type'] = $appointment_type;
+        $data['availability'] = App\Availability::whereDate('date',$date)
+            ->where('doctor_id',$doctor->id)
+            ->where('clinic_id',$clinic->id)
+            ->get(['id','time','duration']);
+        return $data;
+    }
 }

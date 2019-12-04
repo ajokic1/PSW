@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import moment from 'moment';
 
 import PrivateRoute from "./auth/PrivateRoute";
 import LoginRoute from "./auth/LoginRoute";
@@ -11,6 +12,7 @@ import Logout from "./auth/Logout";
 import AuthControls from "./auth/AuthControls";
 import Clinics from "./clinics/Clinics";
 import Navbar from "./partials/Navbar";
+import SubmitAppointment from './appointments/SubmitAppointment';
 
 export default class App extends Component {
     constructor(props){
@@ -25,6 +27,7 @@ export default class App extends Component {
     }
     componentDidMount() {
         let user = localStorage["user"];
+        moment().locale('sr');
         if (user) {
             user=JSON.parse(user);
             this.setState({ isLoggedIn: true, user: user });
@@ -74,6 +77,9 @@ export default class App extends Component {
                         <div class='container py-4'>
                             Home page
                         </div>
+                    </PrivateRoute>
+                    <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/appointment/:doctorId/:clinicId/:appTypeId/:date">
+                        <SubmitAppointment />
                     </PrivateRoute>                    
                     <LoginRoute isLoggedIn={this.state.isLoggedIn} path="/register">
                         <Register authSuccess={this.authSuccess}/>
