@@ -3,8 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Appointment;
+use \Exception;
+use App\Doctor;
+use App\Clinic;
+use App\AppointmentType;
+use App\Availability;
+use App\Mail\AppointmentApproved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AppointmentController extends Controller
 {
@@ -36,7 +45,7 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
-        DB::transaction(function() {
+        //DB::transaction(function() {
             $validated = $request->validate([
                 'user_id'=>'required',
                 'doctor_id'=>'required',
@@ -45,28 +54,33 @@ class AppointmentController extends Controller
                 'date'=>'required',
                 'time'=>'required',
             ]);
-            $validated['token'] = str_random(16);
-            if(Auth::id()!=$validated->user_id){
+            $validated['token'] = Str::random(16);
+            if(Auth::id()!=$validated['user_id']){
                 throw new Exception('Appointment user_id doesn\'t match id of logged in user');
-            } else if(!isAvailable($validated)){
+            } else if(!$this->isAvailable($validated)){
                 throw new Exception('The selected appointment time is not available');
             } else {
                 $appointment = Appointment::create($validated);
             }
-        });
-        if($appointment) return response('Appointment successfully created', 201);
+        //});
+        if($appointment) {
+            $data = [];
+            Mail::to(Auth::user()->email)
+                ->send(new AppointmentApproved($appointment, $data));
+            return response('Appointment successfully created', 201);
+        }
         else return response('Appointment creation failed', 400);
         
     }
 
     private function isAvailable($validated) {
-        $doctor = App\Doctor::find($validated->doctor_id);
-        $clinic = $doctor->clinics->find($validated->clinic_id);
+        $doctor = Doctor::find($validated['doctor_id']);
+        $clinic = $doctor->clinics->find($validated['clinic_id']);
         $work_start = $clinic->pivot->works_from;
         $work_end = $clinic->pivot->works_to;
 
-        $appointment_type = App\AppointmentType::find($validated->appointment_type);
-        $start_time = strtotime($validated->time, 0);
+        $appointment_type = AppointmentType::find($validated['appointment_type_id']);
+        $start_time = strtotime($validated['time'], 0);
         $end_time = $start_time + strtotime($appointment_type->duration, 0); 
         
         if($start_time<$work_start || $end_time>$work_end){
@@ -87,7 +101,17 @@ class AppointmentController extends Controller
         if($appointment->token == $token){
             $appointment->accepted = true;
             event(new AppointmentAccepted($appointment));
+            $appointment->save();
             return response('Appointment accepted',200);
+        }
+        return response('Invalid token', 400);
+    }
+
+    public function decline(Appointment $appointment, $token) {
+        if($appointment->token == $token){
+            $appointment->accepted = false;
+            $appointment->save();
+            return response('Appointment declined',200);
         }
         return response('Invalid token', 400);
     }
@@ -137,11 +161,11 @@ class AppointmentController extends Controller
         //
     }
 
-    public function details(App\Doctor $doctor, App\Clinic $clinic, App\AppointmentType $appointment_type, $date) {
+    public function details(Doctor $doctor, Clinic $clinic, AppointmentType $appointment_type, $date) {
         $data['doctor'] = $doctor;
         $data['clinic'] = $clinic;
         $data['appointment_type'] = $appointment_type;
-        $data['availability'] = App\Availability::whereDate('date',$date)
+        $data['availability'] = Availability::whereDate('date',$date)
             ->where('doctor_id',$doctor->id)
             ->where('clinic_id',$clinic->id)
             ->get(['id','time','duration']);

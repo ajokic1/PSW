@@ -32,9 +32,12 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
     Route::get('availability/date/{date}',
         'AvailabilityController@get');
     
-
+    Route::get('appointments/details/{doctor}/{clinic}/{appointment_type}/{date}',
+        'AppointmentController@details');
     Route::get('appointments/{appointment}/accept/{token}', 
         'AppointmentController@accept');
+    Route::get('appointments/{appointment}/decline/{token}', 
+        'AppointmentController@decline');
     
 
 });

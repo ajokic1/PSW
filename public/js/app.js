@@ -93284,6 +93284,36 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_
 
 /***/ }),
 
+/***/ "./resources/js/components/appointments/AppointmentTime.js":
+/*!*****************************************************************!*\
+  !*** ./resources/js/components/appointments/AppointmentTime.js ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AppointmentTime; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function AppointmentTime(props) {
+  var timeString = function timeString() {
+    var start = moment__WEBPACK_IMPORTED_MODULE_1___default()(props.a.time, 'HH:mm:ss');
+    var end = start.clone().add(moment__WEBPACK_IMPORTED_MODULE_1___default.a.duration(props.a.duration));
+    return start.format('H:mm') + '-' + end.format('H:mm');
+  };
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "yeet_box"
+  }, timeString());
+}
+
+/***/ }),
+
 /***/ "./resources/js/components/appointments/SubmitAppointment.js":
 /*!*******************************************************************!*\
   !*** ./resources/js/components/appointments/SubmitAppointment.js ***!
@@ -93295,6 +93325,8 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _AppointmentTime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppointmentTime */ "./resources/js/components/appointments/AppointmentTime.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -93315,6 +93347,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
+
 var SubmitAppointment =
 /*#__PURE__*/
 function (_Component) {
@@ -93330,7 +93364,8 @@ function (_Component) {
       doctor: {},
       clinic: {},
       appointment_type: {},
-      availability: []
+      availability: [],
+      loaded: false
     };
     return _this;
   }
@@ -93349,31 +93384,32 @@ function (_Component) {
           doctor: json.data.doctor,
           clinic: json.data.clinic,
           appointment_type: json.data.appointment_type,
-          availability: json.data.availability
+          availability: json.data.availability,
+          loaded: true
         });
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var appTimes = this.state.availability.map(function (a) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(AppointmentTime, {
+      var appTimes = this.state.availability ? this.state.availability.map(function (a) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_AppointmentTime__WEBPACK_IMPORTED_MODULE_2__["default"], {
           a: a,
           key: a.id
         });
-      });
+      }) : "Loading...";
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card shadow col-md-12 col-lg-8 mx-auto my-5 px-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Zakazivanje pregleda"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrani ljekar: ", this.state.doctor.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrana klinika: ", this.state.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrani pregled: ", this.state.appointment_type.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Trajanje odabranog pregleda: ", this.state.appointment_type.duration), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Slobodni termini:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, appTimes)));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Zakazivanje pregleda"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), this.state.doctor && this.state.clinic && this.state.appointment_type ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrani ljekar: ", this.state.doctor.first_name + ' ' + this.state.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrana klinika: ", this.state.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrani pregled: ", this.state.appointment_type.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Trajanje odabranog pregleda: ", this.state.appointment_type.duration), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Slobodni termini:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, appTimes)) : "Loading..."));
     }
   }]);
 
   return SubmitAppointment;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
-/* harmony default export */ __webpack_exports__["default"] = (withRouter(SubmitAppointment));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(SubmitAppointment));
 
 /***/ }),
 
@@ -94420,6 +94456,8 @@ function (_Component) {
         appointmentTypes: this.props.appointmentTypes,
         appointmentTypeId: this.props.appointmentTypeId
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_doctors_DoctorList__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        appointmentTypeId: this.props.appointmentTypeId,
+        date: this.props.date,
         clinicId: this.state.clinic.id,
         doctors: this.state.filteredDoctors,
         availability: this.props.availability
@@ -94635,8 +94673,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DoctorCard; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -94654,6 +94693,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -94680,13 +94720,15 @@ function (_Component) {
       };
 
       var availableTime = function availableTime(a) {
-        var start = moment__WEBPACK_IMPORTED_MODULE_1___default()(a.time, 'HH:mm:ss');
-        var end = start.clone().add(moment__WEBPACK_IMPORTED_MODULE_1___default.a.duration(a.duration));
+        var start = moment__WEBPACK_IMPORTED_MODULE_2___default()(a.time, 'HH:mm:ss');
+        var end = start.clone().add(moment__WEBPACK_IMPORTED_MODULE_2___default.a.duration(a.duration));
         return start.format('H:mm') + '-' + end.format('H:mm');
       };
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 m-0"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: this.props.link
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         onClick: this.props.onClick,
         className: "m-1 card bg-light dark_hover row",
@@ -94707,7 +94749,7 @@ function (_Component) {
         className: "card-text"
       }, this.props.availability.map(function (a) {
         return availableTime(a) + ', ';
-      })))));
+      }))))));
     }
   }]);
 
@@ -94845,6 +94887,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _DoctorCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DoctorCard */ "./resources/js/components/doctors/DoctorCard.js");
 /* harmony import */ var _partials_Loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partials/Loading */ "./resources/js/components/partials/Loading.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -94867,6 +94911,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var DoctorList =
 /*#__PURE__*/
 function (_Component) {
@@ -94884,13 +94929,12 @@ function (_Component) {
       var _this = this;
 
       var doctorList = [];
+      var date = new Date(this.props.date).toISOString().split('T')[0];
 
       if (this.props.doctors) {
         doctorList = this.props.doctors.map(function (doctor) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DoctorCard__WEBPACK_IMPORTED_MODULE_1__["default"], {
-            onClick: function onClick() {
-              return _this.props.handleClick(doctor.id);
-            },
+            link: '/appointment/' + doctor.id + '/' + _this.props.clinicId + '/' + _this.props.appointmentTypeId + '/' + date,
             doctor: doctor,
             key: doctor.id,
             availability: _this.props.availability.filter(function (a) {

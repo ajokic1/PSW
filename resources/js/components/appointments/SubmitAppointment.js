@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+
+import AppointmentTime from './AppointmentTime';
 
 class SubmitAppointment extends Component {
     constructor(props) {
@@ -8,6 +11,7 @@ class SubmitAppointment extends Component {
             clinic: {},
             appointment_type: {},
             availability: [],
+            loaded: false,
         }
     }
     componentDidMount() {
@@ -23,24 +27,32 @@ class SubmitAppointment extends Component {
                     clinic: json.data.clinic,
                     appointment_type: json.data.appointment_type,
                     availability: json.data.availability,
+                    loaded: true,
                 }); 
             });
     }
     render() {
-        const appTimes = this.state.availability.map(a => <AppointmentTime a={a} key={a.id}/>)
+        const appTimes = this.state.availability 
+            ? this.state.availability.map(a => <AppointmentTime a={a} key={a.id}/>)
+            : "Loading...";
+        
         return (
             <div className='card shadow col-md-12 col-lg-8 mx-auto my-5 px-5'>
                 <div className='card-body'>
                     <h1>Zakazivanje pregleda</h1>
                     <hr/>
-                    <p>Odabrani ljekar: {this.state.doctor.name}</p>
-                    <p>Odabrana klinika: {this.state.clinic.name}</p>
-                    <p>Odabrani pregled: {this.state.appointment_type.name}</p>
-                    <p>Trajanje odabranog pregleda: {this.state.appointment_type.duration}</p>
-                    <p>Slobodni termini:</p>
+                    { (this.state.doctor && this.state.clinic && this.state.appointment_type) ?
                     <div>
-                        {appTimes}
+                        <p>Odabrani ljekar: {this.state.doctor.first_name + ' ' + this.state.doctor.last_name}</p>
+                        <p>Odabrana klinika: {this.state.clinic.name}</p>
+                        <p>Odabrani pregled: {this.state.appointment_type.name}</p>
+                        <p>Trajanje odabranog pregleda: {this.state.appointment_type.duration}</p>
+                        <p>Slobodni termini:</p>
+                        <div>
+                            {appTimes}
+                        </div>
                     </div>
+                    : "Loading..."}
                 </div>                
             </div>
         );
