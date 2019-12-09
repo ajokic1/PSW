@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Availability;
+use App\Clinic;
 use App\Events\AppointmentAccepted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -29,15 +30,23 @@ class AddToAvailability
     {
         $start_time = $event->appointment->time;
         $end_time = date('H:i:s',strtotime($start_time,0)+strtotime($event->appointment->appointment_type->duration,0));
-        $availability = Availability::whereTime('time','<',$start_time)
-            ->whereTime('time + duration','>',$end_time)
+        $availabilities = Availability::whereTime('time','<',$start_time)
             ->whereDate('date', $event->appointment->date)
             ->where('doctor_id',$event->appointment->doctor_id)
             ->where('clinic_id',$event->appointment->clinic_id)
-            ->first();
+            //->havingRaw('\'time\' + \'duration\' AS end_time > '.$end_time)
+            ->get();
+        $availability=null;
+        if($availabilities){
+            foreach ($availabilities as $av) {
+                if(strtotime($av->time,0)+strtotime($av->duration,0)>strtotime($end_time,0)){
+                    $availability=$av;
+                }
+            }
+        }
 
         if(!$availability){
-            $clinic_doctor = App\Clinic::find($event->appointment->clinic_id)
+            $clinic_doctor = Clinic::find($event->appointment->clinic_id)
                 ->doctors()->where('doctors.id',$event->appointment->doctor_id)
                 ->first()->pivot;
             $work_start = strtotime($clinic_doctor->works_from,0);
@@ -50,8 +59,7 @@ class AddToAvailability
             $availability->time = date('H:i:s',$work_start);
             $availability->duration = date('H:i:s',$work_duration);
             $availability->save();
-        }    
-
+        }
         $availability1 = $availability->replicate();
         $availability1->duration = 
             date('H:i:s', strtotime($start_time,0)-strtotime($availability1->time,0));

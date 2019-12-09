@@ -29,6 +29,10 @@ class Doctor extends Model
     public function predef_appointments() {
         return $this->hasMany('App\PredefAppointment');
     }
+
+    public function appointments() {
+        return $this->hasMany('App\Appointment');
+    }
     public function getAppointmentTypesAttribute() {
         $appointment_types = DB::table('appointment_type_doctor')
             ->where('doctor_id', $this->id)

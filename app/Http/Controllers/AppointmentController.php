@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Appointment;
+use App\Events\AppointmentAccepted;
+use App\Events\AppointmentCancelled;
 use \Exception;
 use App\Doctor;
 use App\Clinic;
@@ -66,32 +68,34 @@ class AppointmentController extends Controller
         if($appointment) {
             $data = [];
             Mail::to(Auth::user()->email)
-                ->send(new AppointmentApproved($appointment, $data));
+                ->queue(new AppointmentApproved($appointment, $data));
+            event(new AppointmentAccepted($appointment));
             return response('Appointment successfully created', 201);
         }
         else return response('Appointment creation failed', 400);
         
     }
 
-    private function isAvailable($validated) {
+    public function isAvailable($validated) {
         $doctor = Doctor::find($validated['doctor_id']);
         $clinic = $doctor->clinics->find($validated['clinic_id']);
-        $work_start = $clinic->pivot->works_from;
-        $work_end = $clinic->pivot->works_to;
+        $work_start = strtotime($clinic->pivot->works_from, 0);
+        $work_end = strtotime($clinic->pivot->works_to,0);
 
         $appointment_type = AppointmentType::find($validated['appointment_type_id']);
         $start_time = strtotime($validated['time'], 0);
         $end_time = $start_time + strtotime($appointment_type->duration, 0); 
-        
-        if($start_time<$work_start || $end_time>$work_end){
+
+        if($start_time<$work_start || $end_time>$work_end){            
             return false;
         }
-
-        foreach ($doctor->appointments as $appointment) {
-            if(!($end_time < strtotime($appointment->time,0) 
-                    || $start_time > strtotime($appointment->appointment_type->duration,0)
-                    +strtotime($appointment->time,0))){
-                return false;
+        if($doctor->appointments->where('date',$validated['date'])){
+            foreach ($doctor->appointments->where('date',$validated['date']) as $appointment) {
+                if(!($end_time < strtotime($appointment->time,0) 
+                        || $start_time > strtotime($appointment->appointment_type->duration,0)
+                        +strtotime($appointment->time,0))){
+                    return false;
+                }
             }
         }
         return true;
@@ -158,7 +162,18 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
-        //
+        if($appointment->user_id != Auth::id())
+            return response('Patients can only cancel their own appointments', 401);
+        $timestamp = strtotime($appointment->date . ' ' . $appointment->time);
+        $curr_timestamp = time();
+        if($timestamp - $curr_timestamp < strtotime('24:00:00',0))
+            return response('Appointments can be cancelled until 24 hours before
+             due time', 400);
+        event(new AppointmentCancelled($appointment));
+        $appointment->delete();
+
+        return response('Appointment cancelled', 200);
+
     }
 
     public function details(Doctor $doctor, Clinic $clinic, AppointmentType $appointment_type, $date) {
