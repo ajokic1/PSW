@@ -14,6 +14,7 @@ import Clinics from "./clinics/Clinics";
 import Navbar from "./partials/Navbar";
 import SubmitAppointment from './appointments/SubmitAppointment';
 import Appointments from './appointments/Appointments';
+import Home from './Home';
 
 export default class App extends Component {
     constructor(props){
@@ -75,9 +76,7 @@ export default class App extends Component {
                         <Clinics />
                     </PrivateRoute>
                     <PrivateRoute isLoggedIn={this.state.isLoggedIn} exact path="/">
-                        <div class='container py-4'>
-                            Home page
-                        </div>
+                        <Home/>
                     </PrivateRoute>
                     <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/appointment/:doctorId/:clinicId/:appTypeId/:date">
                         <SubmitAppointment />
