@@ -93343,8 +93343,6 @@ function (_Component) {
         className: "h-100 m-0 p-5",
         style: style
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "display-3 mt-5 text-center"
-      }, "Pregledaj.me"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "d-flex flex-row justify-content-center mt-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/clinics",
@@ -94792,7 +94790,13 @@ function (_Component) {
         clinicId: this.state.clinic.id,
         doctors: this.state.filteredDoctors,
         availability: this.props.availability
-      })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Loading__WEBPACK_IMPORTED_MODULE_2__["default"], null));
+      })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Loading__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        style: {
+          width: '1rem',
+          height: '1rem',
+          color: 'white'
+        }
+      }, "."));
     }
   }]);
 

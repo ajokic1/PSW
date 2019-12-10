@@ -5,7 +5,9 @@ export default class Home extends Component {
     render() {
         return (
             <div className='h-100 m-0 p-5' style={style}>
-                <div className='display-3 mt-5 text-center'>Pregledaj.me</div>
+                {
+                //<div className='display-3 mt-5 text-center'>Pregledaj.me</div>
+                }
                 <div className='d-flex flex-row justify-content-center mt-5'>
                     <Link to='/clinics' style={{ textDecoration: 'none', color: 'black' }}>
                         <div className='card_outline'>

@@ -85,6 +85,7 @@ export default class ClinicOverlay extends Component {
                         </div>
                         : <Loading/>
                     }
+                    <div style={{width: '1rem', height:'1rem', color: 'white'}}>.</div>
 
                 </div>
         );
