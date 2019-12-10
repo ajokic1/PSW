@@ -8,6 +8,7 @@ use App\Events\AppointmentCancelled;
 use \Exception;
 use App\Doctor;
 use App\Clinic;
+use App\User;
 use App\AppointmentType;
 use App\Availability;
 use App\Mail\AppointmentApproved;
@@ -24,9 +25,13 @@ class AppointmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-
+        if($user->id != Auth::id())
+            return response('A patient can only access their own appointments', 401);
+        return Appointment::where('user_id',$user->id)
+            ->with(['clinic','doctor','appointment_type'])
+            ->get();
     }
 
     /**

@@ -38,6 +38,8 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
         'AppointmentController@accept');
     Route::get('appointments/{appointment}/decline/{token}', 
         'AppointmentController@decline');
+
+    Route::get('user/{user}/appointments', 'AppointmentController@index');
     
 
 });

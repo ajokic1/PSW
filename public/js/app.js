@@ -93133,6 +93133,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _clinics_Clinics__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./clinics/Clinics */ "./resources/js/components/clinics/Clinics.js");
 /* harmony import */ var _partials_Navbar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./partials/Navbar */ "./resources/js/components/partials/Navbar.js");
 /* harmony import */ var _appointments_SubmitAppointment__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./appointments/SubmitAppointment */ "./resources/js/components/appointments/SubmitAppointment.js");
+/* harmony import */ var _appointments_Appointments__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./appointments/Appointments */ "./resources/js/components/appointments/Appointments.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -93150,6 +93151,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -93262,7 +93264,12 @@ function (_Component) {
       }, "Home page")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_PrivateRoute__WEBPACK_IMPORTED_MODULE_4__["default"], {
         isLoggedIn: this.state.isLoggedIn,
         path: "/appointment/:doctorId/:clinicId/:appTypeId/:date"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_appointments_SubmitAppointment__WEBPACK_IMPORTED_MODULE_13__["default"], null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_LoginRoute__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_appointments_SubmitAppointment__WEBPACK_IMPORTED_MODULE_13__["default"], null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_PrivateRoute__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        isLoggedIn: this.state.isLoggedIn,
+        path: "/appointments"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_appointments_Appointments__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        user: this.state.user
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_LoginRoute__WEBPACK_IMPORTED_MODULE_5__["default"], {
         isLoggedIn: this.state.isLoggedIn,
         path: "/register"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_Register__WEBPACK_IMPORTED_MODULE_6__["default"], {
@@ -93311,6 +93318,105 @@ function AppointmentTime(props) {
     className: "yeet_box"
   }, timeString());
 }
+
+/***/ }),
+
+/***/ "./resources/js/components/appointments/Appointments.js":
+/*!**************************************************************!*\
+  !*** ./resources/js/components/appointments/Appointments.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Appointments; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var Appointments =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(Appointments, _Component);
+
+  function Appointments(props) {
+    var _this;
+
+    _classCallCheck(this, Appointments);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Appointments).call(this, props));
+    _this.state = {
+      appointments: []
+    };
+    return _this;
+  }
+
+  _createClass(Appointments, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      axios.get('/api/user/' + this.props.user.id + '/appointments').then(function (json) {
+        _this2.setState({
+          appointments: json.data
+        });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var appointments = this.state.appointments.map(function (a) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+          key: a.id
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.appointment_type.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.doctor.first_name + ' ' + a.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.date), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.appointment_type.duration), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null));
+      });
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "m-4 h-100"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Zakazani pregledi"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+        className: "table"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Vrsta pregleda"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Klinika"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Ljekar"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Datum"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Vrijeme"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Trajanje pregleda"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Akcije"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", {
+        className: "overflow-auto"
+      }, appointments)));
+    }
+  }]);
+
+  return Appointments;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
 
 /***/ }),
 
@@ -94728,7 +94834,11 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 m-0"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-        to: this.props.link
+        to: this.props.link,
+        style: {
+          textDecoration: 'none',
+          color: 'black'
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         onClick: this.props.onClick,
         className: "m-1 card bg-light dark_hover row",
@@ -95087,7 +95197,14 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "nav-link",
         href: "#"
-      }, "Klinike")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_AuthControls__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      }, "Klinike"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: "nav-item active"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/appointments"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "nav-link",
+        href: "#"
+      }, "Zakazani pregledi")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_AuthControls__WEBPACK_IMPORTED_MODULE_2__["default"], {
         user: this.props.user,
         isLoggedIn: this.props.isLoggedIn,
         logout: this.props.logout

@@ -13,6 +13,7 @@ import AuthControls from "./auth/AuthControls";
 import Clinics from "./clinics/Clinics";
 import Navbar from "./partials/Navbar";
 import SubmitAppointment from './appointments/SubmitAppointment';
+import Appointments from './appointments/Appointments';
 
 export default class App extends Component {
     constructor(props){
@@ -80,6 +81,9 @@ export default class App extends Component {
                     </PrivateRoute>
                     <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/appointment/:doctorId/:clinicId/:appTypeId/:date">
                         <SubmitAppointment />
+                    </PrivateRoute>
+                    <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/appointments">
+                        <Appointments user={this.state.user}/>
                     </PrivateRoute>                    
                     <LoginRoute isLoggedIn={this.state.isLoggedIn} path="/register">
                         <Register authSuccess={this.authSuccess}/>
