@@ -14,7 +14,9 @@ export default class Clinics extends Component {
             filteredClinics: [],
             appointmentTypes: [],
             appointmentTypeId: -1,
-            date: new Date(),
+            availability: [],
+            needsFiltering: false,
+            date: null,
         }
         this.handleSelect = this.handleSelect.bind(this);
         this.filterClinics = this.filterClinics.bind(this);
@@ -35,7 +37,7 @@ export default class Clinics extends Component {
     handleSelect(selectedOption, target){
         if(target.name=='appointmentTypes'){
             if(target.action=='select-option'){
-                this.setState({appointmentTypeId: selectedOption.value});
+                this.setState({appointmentTypeId: selectedOption.value, date: null, needsFiltering: true});
             }
             if(target.action=='clear'){
                 this.setState((state, props) => ({
@@ -47,16 +49,30 @@ export default class Clinics extends Component {
 
     }
     setDate(date){
+        const formattedDate = ((new Date(date)).toISOString().split('T')[0])
         this.setState({date});
+        if(this.state.appointmentTypeId != -1){
+            axios.get('/api/availability/date/'+formattedDate)
+                .then(json =>
+                    this.setState({availability: json.data, needsFiltering: true})
+                );
+
+        }
     }
     filterClinics() {
         if(this.state.clinics 
-            && this.state.filteredByAppType != this.state.appointmentTypeId
-            && this.state.appointmentTypeId != -1){
+            && this.state.needsFiltering){
+            const appointmentType = this.state.appointmentTypes
+                .find(t => t.id = this.state.appointmentTypeId);
             const filteredClinics = this.state.clinics.filter(clinic => 
-                clinic.appointment_types.includes(this.state.appointmentTypeId));
+                clinic.appointment_types.includes(this.state.appointmentTypeId)
+                && (this.state.availability.length > 0
+                    ? this.state.availability.some(a => a.clinic_id == clinic.id 
+                        && a.duration>appointmentType.duration)
+                    : true));
             this.setState((state, props) => ({
-                filteredClinics: filteredClinics, 
+                filteredClinics: filteredClinics,
+                needsFiltering: false, 
                 filteredByAppType: this.state.appointmentTypeId}));
         }        
     }
@@ -83,7 +99,8 @@ export default class Clinics extends Component {
                             setDate={this.setDate} 
                             appointmentTypes={this.state.appointmentTypes} 
                             appointmentTypeId={this.state.appointmentTypeId}
-                            handleChange={this.handleSelect}/>
+                            handleChange={this.handleSelect}
+                            availability={this.state.availability}/>
                     </Overlay>
                 </Route>
             </div>

@@ -76,10 +76,16 @@ export default class ClinicOverlay extends Component {
                                 handleSelect={this.handleSelect}
                                 appointmentTypes={this.props.appointmentTypes}
                                 appointmentTypeId={this.props.appointmentTypeId}/>
-                            <DoctorList doctors={this.state.filteredDoctors}/>
+                            <DoctorList
+                                appointmentTypeId={this.props.appointmentTypeId}
+                                date={this.props.date} 
+                                clinicId={this.state.clinic.id}
+                                doctors={this.state.filteredDoctors} 
+                                availability={this.props.availability}/>
                         </div>
                         : <Loading/>
                     }
+                    <div style={{width: '1rem', height:'1rem', color: 'white'}}>.</div>
 
                 </div>
         );

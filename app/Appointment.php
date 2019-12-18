@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     protected $guarded=[];
-    protected $appends = ['time_from_to'];
+    protected $hidden=['created_at', 'updated_at'];
 
     public function user() {
         return $this->belongsTo('App\User');

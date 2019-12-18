@@ -23,6 +23,7 @@ class CreateAppointmentsTable extends Migration
             $table->time('time');
             $table->boolean('confirmed')->default(true);
             $table->boolean('accepted')->default(false);
+            $table->string('token');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

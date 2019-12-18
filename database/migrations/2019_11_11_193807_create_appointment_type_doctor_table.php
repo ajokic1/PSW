@@ -17,6 +17,7 @@ class CreateAppointmentTypeDoctorTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('doctor_id');
             $table->unsignedBigInteger('appointment_type_id');
+            $table->decimal('price', 8, 2);
             $table->timestamps();
 
             $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');

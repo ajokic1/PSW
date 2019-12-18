@@ -20,7 +20,8 @@ export default class ClinicFilters extends Component {
                 <DatePicker 
                     selected={this.props.date} 
                     onChange={this.props.setDate}
-                    dateFormat='dd.MM.yyyy' />
+                    dateFormat='dd.MM.yyyy'
+                    placeholderText='Odaberi datum pregleda' />
                 </div>
             </div>
         );
