@@ -34,8 +34,6 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
     
     Route::get('appointments/details/{doctor}/{clinic}/{appointment_type}/{date}',
         'AppointmentController@details');
-    Route::get('appointments/{appointment}/accept/{token}', 
-        'AppointmentController@accept');
     Route::get('appointments/{appointment}/decline/{token}', 
         'AppointmentController@decline');
 
@@ -52,6 +50,8 @@ Route::group(['middleware' => 'api-header'], function () {
     Route::post('login', 'UserController@login');
     Route::post('register', 'UserController@register');
 
+    Route::get('appointments/{appointment}/accept/{token}', 
+        'AppointmentController@accept');
 
     Route::get('email/verify/{id}', 'ApiVerificationController@verify')
         ->name('verificationapi.verify');

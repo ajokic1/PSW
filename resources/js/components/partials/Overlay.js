@@ -16,7 +16,7 @@ class Overlay extends Component {
         });
         return (
             <div id='overlay' className='position-fixed dark-overlay w-100 h-100 overflow-auto' onClick={this.handleClick}>
-                {children}
+                {children}am
             </div>
         );
     }

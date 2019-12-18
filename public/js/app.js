@@ -81952,7 +81952,7 @@ var setRef = function setRef(ref, node) {
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
   \***************************************************************/
-/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter, BrowserRouter, HashRouter, Link, NavLink */
+/*! exports provided: BrowserRouter, HashRouter, Link, NavLink, MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -93434,7 +93434,10 @@ function AppointmentTime(props) {
   };
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "yeet_box"
+    className: "yeet_box",
+    onClick: function onClick() {
+      return props.submit(props.a.time);
+    }
   }, timeString());
 }
 
@@ -93666,9 +93669,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -93694,8 +93697,10 @@ function (_Component) {
       clinic: {},
       appointment_type: {},
       availability: [],
-      loaded: false
+      loaded: false,
+      isSubmitted: false
     };
+    _this.submitAppointment = _this.submitAppointment.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -93709,6 +93714,8 @@ function (_Component) {
       var appTypeId = this.props.match.params.appTypeId;
       var date = this.props.match.params.date;
       axios.get('/api/appointments/details/' + doctorId + '/' + clinicId + '/' + appTypeId + '/' + date).then(function (json) {
+        console.log(json.data);
+
         _this2.setState({
           doctor: json.data.doctor,
           clinic: json.data.clinic,
@@ -93719,10 +93726,34 @@ function (_Component) {
       });
     }
   }, {
+    key: "submitAppointment",
+    value: function submitAppointment(time) {
+      var _this3 = this;
+
+      var date = this.props.match.params.date;
+      var formData = new FormData();
+      formData.append('doctor_id', this.state.doctor.id);
+      formData.append('clinic_id', this.state.clinic.id);
+      formData.append('appointment_type_id', this.state.appointment_type.id);
+      formData.append('date', date);
+      formData.append('time', time);
+      axios.post('/api/appointments', formData).then(function () {
+        _this3.setState({
+          isSubmitted: true
+        });
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this4 = this;
+
+      if (this.state.isSubmitted) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
+        to: "/appointments"
+      });
       var appTimes = this.state.availability ? this.state.availability.map(function (a) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_AppointmentTime__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          submit: _this4.submitAppointment,
           a: a,
           key: a.id
         });
@@ -95515,7 +95546,7 @@ function (_Component) {
         id: "overlay",
         className: "position-fixed dark-overlay w-100 h-100 overflow-auto",
         onClick: this.handleClick
-      }, children);
+      }, children, "am");
     }
   }]);
 

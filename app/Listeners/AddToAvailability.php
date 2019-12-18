@@ -70,8 +70,10 @@ class AddToAvailability
                 +strtotime($availability->duration,0)
                 -strtotime($end_time,0));
         $availability->delete();
-        $availability1->save();
-        $availability2->save();
+        if($availability1->duration !='00:00:00')
+            $availability1->save();
+        if($availability2->duration !='00:00:00')
+            $availability2->save();
 
     }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 
 import AppointmentTime from './AppointmentTime';
 
@@ -12,7 +12,9 @@ class SubmitAppointment extends Component {
             appointment_type: {},
             availability: [],
             loaded: false,
+            isSubmitted: false,
         }
+        this.submitAppointment = this.submitAppointment.bind(this);
     }
     componentDidMount() {
         const doctorId = this.props.match.params.doctorId;
@@ -22,6 +24,7 @@ class SubmitAppointment extends Component {
         axios
             .get('/api/appointments/details/' + doctorId+'/'+clinicId+'/'+appTypeId+'/'+date)
             .then(json => {
+                console.log(json.data);
                 this.setState({
                     doctor: json.data.doctor,
                     clinic: json.data.clinic,
@@ -31,9 +34,28 @@ class SubmitAppointment extends Component {
                 }); 
             });
     }
+    submitAppointment(time) {
+        const date = this.props.match.params.date;
+
+        let formData = new FormData(); 
+        formData.append('doctor_id', this.state.doctor.id);
+        formData.append('clinic_id', this.state.clinic.id);
+        formData.append('appointment_type_id', this.state.appointment_type.id);
+        formData.append('date', date);
+        formData.append('time', time);
+
+        axios
+            .post('/api/appointments',formData)
+            .then(() => {
+                this.setState({isSubmitted: true});
+            });
+        
+    }
     render() {
+        if(this.state.isSubmitted)
+            return <Redirect to='/appointments'/>;
         const appTimes = this.state.availability 
-            ? this.state.availability.map(a => <AppointmentTime a={a} key={a.id}/>)
+            ? this.state.availability.map(a => <AppointmentTime submit={this.submitAppointment} a={a} key={a.id}/>)
             : "Loading...";
         
         return (

@@ -54,7 +54,7 @@ class AppointmentController extends Controller
     {
         //DB::transaction(function() {
             $validated = $request->validate([
-                'user_id'=>'required',
+                'user_id'=>'nullable',
                 'doctor_id'=>'required',
                 'clinic_id'=>'required',
                 'appointment_type_id'=>'required',
@@ -62,9 +62,10 @@ class AppointmentController extends Controller
                 'time'=>'required',
             ]);
             $validated['token'] = Str::random(16);
-            if(Auth::id()!=$validated['user_id']){
-                throw new Exception('Appointment user_id doesn\'t match id of logged in user');
-            } else if(!$this->isAvailable($validated)){
+            $validated['user_id'] = Auth::id();
+            //if(Auth::id()!=$validated['user_id']){
+            //    throw new Exception('Appointment user_id doesn\'t match id of logged in user');}
+            if(!$this->isAvailable($validated)){
                 throw new Exception('The selected appointment time is not available');
             } else {
                 $appointment = Appointment::create($validated);
@@ -73,7 +74,7 @@ class AppointmentController extends Controller
         if($appointment) {
             $data = [];
             Mail::to(Auth::user()->email)
-                ->queue(new AppointmentApproved($appointment, $data));
+                ->send(new AppointmentApproved($appointment, $data));
             event(new AppointmentAccepted($appointment));
             return response('Appointment successfully created', 201);
         }
@@ -96,8 +97,8 @@ class AppointmentController extends Controller
         }
         if($doctor->appointments->where('date',$validated['date'])){
             foreach ($doctor->appointments->where('date',$validated['date']) as $appointment) {
-                if(!($end_time < strtotime($appointment->time,0) 
-                        || $start_time > strtotime($appointment->appointment_type->duration,0)
+                if(!($end_time <= strtotime($appointment->time,0) 
+                        || $start_time >= strtotime($appointment->appointment_type->duration,0)
                         +strtotime($appointment->time,0))){
                     return false;
                 }
@@ -185,10 +186,28 @@ class AppointmentController extends Controller
         $data['doctor'] = $doctor;
         $data['clinic'] = $clinic;
         $data['appointment_type'] = $appointment_type;
-        $data['availability'] = Availability::whereDate('date',$date)
+        $availabilities = Availability::whereDate('date',$date)
             ->where('doctor_id',$doctor->id)
             ->where('clinic_id',$clinic->id)
             ->get(['id','time','duration']);
+        if($availabilities->isEmpty()){
+            $availabilities = [['id'=>1, 'time'=>'08:00:00', 'duration'=>'08:00:00']];
+        }
+        $available_times = array();
+        $id=0;
+        foreach ($availabilities as $a) {
+            $start = strtotime($a['time'],0);
+            $end = $start + strtotime($a['duration']) - strtotime($appointment_type['duration']);
+            $curr = $start;
+            $step = 30 * 60;
+            while($curr<$end){
+                $time=['id'=>$id, 'time'=>date('H:i:s', $curr), 'duration'=>$appointment_type->duration];
+                array_push($available_times, $time);
+                $id++;
+                $curr = $curr + $step;
+            }
+        }
+        $data['availability'] = $available_times;        
         return $data;
     }
 }

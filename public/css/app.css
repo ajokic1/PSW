@@ -15508,6 +15508,24 @@ html,
   box-shadow: none;
 }
 
+.react-datepicker__input-container input {
+  width: 100%;
+  background-color: white;
+  border-style: solid;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: lightgray;
+  padding: 0.5rem;
+}
+
+.react-datepicker__input-container {
+  display: block !important;
+}
+
+.react-datepicker-wrapper {
+  display: block !important;
+}
+
 .bg-lightgray {
   background-color: lightGray;
 }

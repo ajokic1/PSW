@@ -8,7 +8,7 @@ export default function AppointmentTime(props) {
         return start.format('H:mm') + '-' + end.format('H:mm');
     }
     return (
-        <div className='yeet_box'>
+        <div className='yeet_box' onClick={() => props.submit(props.a.time)}>
             {timeString()}            
         </div>
     );
