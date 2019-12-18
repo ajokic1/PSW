@@ -8,6 +8,7 @@ class Appointment extends Model
 {
     protected $guarded=[];
     protected $hidden=['created_at', 'updated_at'];
+    protected $appends=['timestamp'];
 
     public function user() {
         return $this->belongsTo('App\User');
@@ -23,6 +24,9 @@ class Appointment extends Model
 
     public function appointment_type() {
         return $this->belongsTo('App\AppointmentType');
+    }
+    public function getTimestampAttribute() {
+        return strtotime($this->created_at);
     }
     
 }

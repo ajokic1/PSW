@@ -25,6 +25,7 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
     Route::resource('clinics', 'ClinicController');
     Route::resource('appointment_types', 'AppointmentTypeController');
     Route::resource('appointments', 'AppointmentController');
+    Route::resource('diagnoses', 'DiagnosisController');
     
     //Route::get('clinics/{clinic}/doctors/{doctor}/availability/{date}/{duration}', 
     //    'DoctorController@availability');
@@ -38,6 +39,8 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
         'AppointmentController@decline');
 
     Route::get('user/{user}/appointments', 'AppointmentController@index');
+
+
     
 
 });

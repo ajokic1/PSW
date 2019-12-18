@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Diagnosis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DiagnosisController extends Controller
 {
@@ -14,7 +15,11 @@ class DiagnosisController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        $diagnoses = $user->diagnoses()->with(['condition', 'doctor'])
+            ->get();
+        return $diagnoses;
+
     }
 
     /**
@@ -46,7 +51,7 @@ class DiagnosisController extends Controller
      */
     public function show(Diagnosis $diagnosis)
     {
-        //
+        return $diagnosis->with(['condition', 'doctor'])->get();
     }
 
     /**
