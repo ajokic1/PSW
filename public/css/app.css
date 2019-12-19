@@ -15586,6 +15586,11 @@ html,
   background-color: gray;
 }
 
+.hoverLightGray:hover {
+  background-color: lightgray;
+  cursor: pointer;
+}
+
 .lds-dual-ring {
   display: inline-block;
   width: 64px;
