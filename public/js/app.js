@@ -95336,16 +95336,16 @@ function (_Component) {
 
 /***/ }),
 
-/***/ "./resources/js/components/history/History.js":
-/*!****************************************************!*\
-  !*** ./resources/js/components/history/History.js ***!
-  \****************************************************/
+/***/ "./resources/js/components/history/AppointmentHistory.js":
+/*!***************************************************************!*\
+  !*** ./resources/js/components/history/AppointmentHistory.js ***!
+  \***************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return History; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AppointmentHistory; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
@@ -95371,6 +95371,129 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+var AppointmentHistory =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(AppointmentHistory, _Component);
+
+  function AppointmentHistory() {
+    _classCallCheck(this, AppointmentHistory);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(AppointmentHistory).apply(this, arguments));
+  }
+
+  _createClass(AppointmentHistory, [{
+    key: "render",
+    value: function render() {
+      console.log(this.props.item);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.item.appointment_type.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Tip pregleda: ", this.props.item.appointment_type.type), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Trajanje pregleda: ", this.props.item.appointment_type.duration), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Ljekar: ", this.props.item.doctor.first_name + " " + this.props.item.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Klinika: ", this.props.item.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Datum i vrijeme pregleda:", moment__WEBPACK_IMPORTED_MODULE_1___default.a.unix(this.props.item.timestamp).format('DD.MM.YYYY HH:mm')));
+    }
+  }]);
+
+  return AppointmentHistory;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/history/DiagnosisHistory.js":
+/*!*************************************************************!*\
+  !*** ./resources/js/components/history/DiagnosisHistory.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DiagnosisHistory; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+var DiagnosisHistory =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(DiagnosisHistory, _Component);
+
+  function DiagnosisHistory() {
+    _classCallCheck(this, DiagnosisHistory);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(DiagnosisHistory).apply(this, arguments));
+  }
+
+  _createClass(DiagnosisHistory, [{
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.item.condition.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Opis: ", this.props.item.condition.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Simptomi: ", this.props.item.condition.symptoms), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Prognoza: ", this.props.item.condition.prognosis), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Tip oboljenja: ", this.props.item.condition.type), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Detalji: ", this.props.item.details), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Terapija: ", this.props.item.therapy), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Ljekar: ", this.props.item.doctor.first_name + " " + this.props.item.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Datum i vrijeme dijagnoze: \xA0", moment__WEBPACK_IMPORTED_MODULE_1___default.a.unix(this.props.item.timestamp).format('DD.MM.YYYY HH:mm')));
+    }
+  }]);
+
+  return DiagnosisHistory;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/history/History.js":
+/*!****************************************************!*\
+  !*** ./resources/js/components/history/History.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return History; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _HistoryOverlay__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./HistoryOverlay */ "./resources/js/components/history/HistoryOverlay.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
 var History =
 /*#__PURE__*/
 function (_Component) {
@@ -95386,12 +95509,31 @@ function (_Component) {
       history: [],
       appointments: [],
       diagnoses: [],
-      loading: true
+      loading: true,
+      overlay: false,
+      overlayItem: {}
     };
+    _this.hideOverlay = _this.hideOverlay.bind(_assertThisInitialized(_this));
+    _this.showOverlay = _this.showOverlay.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(History, [{
+    key: "hideOverlay",
+    value: function hideOverlay() {
+      this.setState({
+        overlay: false
+      });
+    }
+  }, {
+    key: "showOverlay",
+    value: function showOverlay(item) {
+      this.setState({
+        overlay: true,
+        overlayItem: item
+      });
+    }
+  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
@@ -95411,15 +95553,22 @@ function (_Component) {
         });
       }));
       axios.all(promises).then(function () {
-        var history = _this2.state.appointments.concat(_this2.state.diagnoses);
+        var history = _this2.state.appointments.concat(_this2.state.diagnoses.map(function (diag) {
+          diag.id += 10000;
+          return diag;
+        }));
 
         history.sort(function (a, b) {
           return a.timestamp > b.timestamp;
         });
         var historyItems = history.map(function (item) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
-            className: "hoverLightGray"
-          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, moment__WEBPACK_IMPORTED_MODULE_1___default.a.unix(item.timestamp).format('DD.MM.YYYY')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, moment__WEBPACK_IMPORTED_MODULE_1___default.a.unix(item.timestamp).format('HH:MM')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, item.condition_id ? "Dijagnoza" : "Pregled"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, item.condition_id ? item.condition.name : item.appointment_type.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, item.doctor.first_name + " " + item.doctor.last_name));
+            key: item.id,
+            className: "hoverLightGray",
+            onClick: function onClick() {
+              return _this2.showOverlay(item);
+            }
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, moment__WEBPACK_IMPORTED_MODULE_1___default.a.unix(item.timestamp).format('DD.MM.YYYY')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, moment__WEBPACK_IMPORTED_MODULE_1___default.a.unix(item.timestamp).format('HH:mm')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, item.condition_id ? "Dijagnoza" : "Pregled"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, item.condition_id ? item.condition.name : item.appointment_type.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, item.doctor.first_name + " " + item.doctor.last_name));
         });
 
         _this2.setState({
@@ -95430,9 +95579,14 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.overlay && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_HistoryOverlay__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        hideOverlay: this.hideOverlay,
+        item: this.state.overlayItem
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "m-4 h-100"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Zdravstveni karton"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+        className: "mb-3"
+      }, "Zdravstveni karton"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
         className: "table"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
         scope: "col"
@@ -95446,11 +95600,85 @@ function (_Component) {
         scope: "col"
       }, "Ljekar"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", {
         className: "overflow-auto"
-      }, this.state.history)));
+      }, this.state.history))));
     }
   }]);
 
   return History;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/history/HistoryOverlay.js":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/history/HistoryOverlay.js ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HistoryOverlay; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _AppointmentHistory__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentHistory */ "./resources/js/components/history/AppointmentHistory.js");
+/* harmony import */ var _DiagnosisHistory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DiagnosisHistory */ "./resources/js/components/history/DiagnosisHistory.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+var HistoryOverlay =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(HistoryOverlay, _Component);
+
+  function HistoryOverlay() {
+    _classCallCheck(this, HistoryOverlay);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(HistoryOverlay).apply(this, arguments));
+  }
+
+  _createClass(HistoryOverlay, [{
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        style: {
+          top: '3rem'
+        },
+        id: "overlay",
+        className: "position-fixed dark-overlay w-100 h-100 overflow-auto",
+        onClick: this.props.hideOverlay
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "w-75 bg-white mx-auto mt-5 p-5 rounded"
+      }, this.props.item.condition ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DiagnosisHistory__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        item: this.props.item
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_AppointmentHistory__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        item: this.props.item
+      })));
+    }
+  }]);
+
+  return HistoryOverlay;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 
@@ -95592,7 +95820,14 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "nav-link",
         href: "#"
-      }, "Zakazani pregledi")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_AuthControls__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      }, "Zakazani pregledi"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: "nav-item active"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/medical_history"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "nav-link",
+        href: "#"
+      }, "Karton")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_AuthControls__WEBPACK_IMPORTED_MODULE_2__["default"], {
         user: this.props.user,
         isLoggedIn: this.props.isLoggedIn,
         logout: this.props.logout
