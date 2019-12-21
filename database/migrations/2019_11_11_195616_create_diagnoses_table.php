@@ -22,6 +22,11 @@ class CreateDiagnosesTable extends Migration
             $table->string('details')->nullable();
             $table->string('therapy')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
+            $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
+            $table->foreign('condition_id')->references('id')->on('conditions')->onDelete('cascade');
         });
     }
 

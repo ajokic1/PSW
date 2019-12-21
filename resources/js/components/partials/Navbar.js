@@ -22,6 +22,9 @@ export default class Navbar extends Component {
                         <li className="nav-item active">
                             <Link to='/appointments'><div className="nav-link" href="#">Zakazani pregledi</div></Link>
                         </li>
+                        <li className="nav-item active">
+                            <Link to='/medical_history'><div className="nav-link" href="#">Karton</div></Link>
+                        </li>
                         
                     </ul>
                     }
