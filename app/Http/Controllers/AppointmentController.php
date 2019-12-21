@@ -30,6 +30,16 @@ class AppointmentController extends Controller
         if($user->id != Auth::id())
             return response('A patient can only access their own appointments', 401);
         return Appointment::where('user_id',$user->id)
+            ->whereDate('date', '>=', date("Y-m-d"))
+            ->with(['clinic','doctor','appointment_type'])
+            ->get();
+    }
+    public function indexHistory(User $user)
+    {
+        if($user->id != Auth::id())
+            return response('A patient can only access their own appointments', 401);
+        return Appointment::where('user_id',$user->id)
+            ->whereDate('date', '<', date("Y-m-d"))
             ->with(['clinic','doctor','appointment_type'])
             ->get();
     }
