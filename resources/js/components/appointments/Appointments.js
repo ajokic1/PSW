@@ -1,20 +1,29 @@
 import React, { Component } from 'react';
 import CancelButton from './CancelButton';
+import Selector from '../partials/Selector';
 
 export default class Appointments extends Component {
     constructor(props) {
         super(props);
         this.state={
             appointments: [],
+            appointmentsHistory: [],
             message: '',
+            selected: 'current',
         }
         this.cancelAppointment = this.cancelAppointment.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
     }
     componentDidMount() {
         axios
             .get('/api/user/' + this.props.user.id + '/appointments')
             .then(json => {
                 this.setState({appointments: json.data});
+            });
+        axios
+            .get('/api/user/' + this.props.user.id + '/appointments/history')
+            .then(json => {
+                this.setState({appointmentsHistory: json.data});
             });
     }
     cancelAppointment(id) {
@@ -32,8 +41,14 @@ export default class Appointments extends Component {
         
 
     }
+    handleSelect(selected) {
+        this.setState({selected});
+    }
     render() {
-        const appointments = this.state.appointments.map(a => (
+        const selectedList = this.state.selected=='current'
+            ? this.state.appointments
+            : this.state.appointmentsHistory;
+        const appointments = selectedList.map(a => (
                 <tr key={a.id}>
                     <td>{a.appointment_type.name}</td>
                     <td>{a.clinic.name}</td>
@@ -42,10 +57,17 @@ export default class Appointments extends Component {
                     <td>{a.time}</td>
                     <td>{a.appointment_type.duration}</td>
                     <td>
-                        <CancelButton a={a} cancelAppointment={this.cancelAppointment}/>
+                        {this.state.selected=='current' &&
+                            <CancelButton a={a} cancelAppointment={this.cancelAppointment}/>}
                     </td>
                 </tr>
             ));
+
+        const currentOrHistory = [
+            {value: 'current', label: 'Zakazani pregledi'},
+            {value: 'history', label: 'Istorija pregleda'}
+        ];
+        const title = currentOrHistory.find(item => item.value==this.state.selected).label;
         return (
             <div className='m-4 h-100'>
                 {this.state.message &&
@@ -53,7 +75,11 @@ export default class Appointments extends Component {
                         {this.state.message}
                     </span>
                 }
-                <h1>Zakazani pregledi</h1>
+                <Selector 
+                    options={currentOrHistory} 
+                    selected={this.state.selected} 
+                    handleSelect={this.handleSelect}/>
+                <h1>{title}</h1>
                 <table className="table">
                     <thead>
                         <tr>

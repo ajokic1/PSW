@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 
-export default class AppointmentHistory extends Component {
+export default class AppointmentHistoryItem extends Component {
     render() {
         console.log(this.props.item);
         return (
