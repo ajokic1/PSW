@@ -93463,6 +93463,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _CancelButton__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CancelButton */ "./resources/js/components/appointments/CancelButton.js");
+/* harmony import */ var _partials_Selector__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partials/Selector */ "./resources/js/components/partials/Selector.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -93484,6 +93485,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var Appointments =
 /*#__PURE__*/
 function (_Component) {
@@ -93497,9 +93499,12 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Appointments).call(this, props));
     _this.state = {
       appointments: [],
-      message: ''
+      appointmentsHistory: [],
+      message: '',
+      selected: 'current'
     };
     _this.cancelAppointment = _this.cancelAppointment.bind(_assertThisInitialized(_this));
+    _this.handleSelect = _this.handleSelect.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -93511,6 +93516,11 @@ function (_Component) {
       axios.get('/api/user/' + this.props.user.id + '/appointments').then(function (json) {
         _this2.setState({
           appointments: json.data
+        });
+      });
+      axios.get('/api/user/' + this.props.user.id + '/appointments/history').then(function (json) {
+        _this2.setState({
+          appointmentsHistory: json.data
         });
       });
     }
@@ -93537,23 +93547,45 @@ function (_Component) {
       });
     }
   }, {
+    key: "handleSelect",
+    value: function handleSelect(selected) {
+      this.setState({
+        selected: selected
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this4 = this;
 
-      var appointments = this.state.appointments.map(function (a) {
+      var selectedList = this.state.selected == 'current' ? this.state.appointments : this.state.appointmentsHistory;
+      var appointments = selectedList.map(function (a) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: a.id
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.appointment_type.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.doctor.first_name + ' ' + a.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.date), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.appointment_type.duration), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CancelButton__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.appointment_type.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.doctor.first_name + ' ' + a.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.date), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, a.appointment_type.duration), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, _this4.state.selected == 'current' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CancelButton__WEBPACK_IMPORTED_MODULE_1__["default"], {
           a: a,
           cancelAppointment: _this4.cancelAppointment
         })));
       });
+      var currentOrHistory = [{
+        value: 'current',
+        label: 'Zakazani pregledi'
+      }, {
+        value: 'history',
+        label: 'Istorija pregleda'
+      }];
+      var title = currentOrHistory.find(function (item) {
+        return item.value == _this4.state.selected;
+      }).label;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "m-4 h-100"
       }, this.state.message && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "position-fixed p-3 fixed-top mt-5 bg-light text-center"
-      }, this.state.message), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Zakazani pregledi"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      }, this.state.message), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Selector__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        options: currentOrHistory,
+        selected: this.state.selected,
+        handleSelect: this.handleSelect
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
         className: "table"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
         scope: "col"
@@ -95336,16 +95368,16 @@ function (_Component) {
 
 /***/ }),
 
-/***/ "./resources/js/components/history/AppointmentHistory.js":
-/*!***************************************************************!*\
-  !*** ./resources/js/components/history/AppointmentHistory.js ***!
-  \***************************************************************/
+/***/ "./resources/js/components/history/AppointmentHistoryItem.js":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/history/AppointmentHistoryItem.js ***!
+  \*******************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AppointmentHistory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AppointmentHistoryItem; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
@@ -95371,18 +95403,18 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-var AppointmentHistory =
+var AppointmentHistoryItem =
 /*#__PURE__*/
 function (_Component) {
-  _inherits(AppointmentHistory, _Component);
+  _inherits(AppointmentHistoryItem, _Component);
 
-  function AppointmentHistory() {
-    _classCallCheck(this, AppointmentHistory);
+  function AppointmentHistoryItem() {
+    _classCallCheck(this, AppointmentHistoryItem);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(AppointmentHistory).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(AppointmentHistoryItem).apply(this, arguments));
   }
 
-  _createClass(AppointmentHistory, [{
+  _createClass(AppointmentHistoryItem, [{
     key: "render",
     value: function render() {
       console.log(this.props.item);
@@ -95390,17 +95422,17 @@ function (_Component) {
     }
   }]);
 
-  return AppointmentHistory;
+  return AppointmentHistoryItem;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 
 
 /***/ }),
 
-/***/ "./resources/js/components/history/DiagnosisHistory.js":
-/*!*************************************************************!*\
-  !*** ./resources/js/components/history/DiagnosisHistory.js ***!
-  \*************************************************************/
+/***/ "./resources/js/components/history/DiagnosisHistoryItem.js":
+/*!*****************************************************************!*\
+  !*** ./resources/js/components/history/DiagnosisHistoryItem.js ***!
+  \*****************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -95623,8 +95655,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HistoryOverlay; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _AppointmentHistory__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentHistory */ "./resources/js/components/history/AppointmentHistory.js");
-/* harmony import */ var _DiagnosisHistory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DiagnosisHistory */ "./resources/js/components/history/DiagnosisHistory.js");
+/* harmony import */ var _AppointmentHistoryItem__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentHistoryItem */ "./resources/js/components/history/AppointmentHistoryItem.js");
+/* harmony import */ var _DiagnosisHistoryItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DiagnosisHistoryItem */ "./resources/js/components/history/DiagnosisHistoryItem.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -95670,9 +95702,9 @@ function (_Component) {
         onClick: this.props.hideOverlay
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "w-75 bg-white mx-auto mt-5 p-5 rounded"
-      }, this.props.item.condition ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DiagnosisHistory__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      }, this.props.item.condition ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DiagnosisHistoryItem__WEBPACK_IMPORTED_MODULE_2__["default"], {
         item: this.props.item
-      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_AppointmentHistory__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_AppointmentHistoryItem__WEBPACK_IMPORTED_MODULE_1__["default"], {
         item: this.props.item
       })));
     }
@@ -95917,6 +95949,75 @@ function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(Overlay));
+
+/***/ }),
+
+/***/ "./resources/js/components/partials/Selector.js":
+/*!******************************************************!*\
+  !*** ./resources/js/components/partials/Selector.js ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Selector; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var Selector =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(Selector, _Component);
+
+  function Selector() {
+    _classCallCheck(this, Selector);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Selector).apply(this, arguments));
+  }
+
+  _createClass(Selector, [{
+    key: "render",
+    value: function render() {
+      var _this = this;
+
+      var options = this.props.options.map(function (option) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: 'mx-1 p-2 flex-grow-0 flex-shrink-0 btn' + (option.value == _this.props.selected ? ' btn-outline-primary' : ' btn-primary'),
+          onClick: function onClick() {
+            return _this.props.handleSelect(option.value);
+          }
+        }, option.label);
+      });
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "w-100 d-flex flex-row justify-content-center"
+      }, options);
+    }
+  }]);
+
+  return Selector;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
 
 /***/ }),
 

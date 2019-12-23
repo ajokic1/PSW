@@ -39,6 +39,7 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
         'AppointmentController@decline');
 
     Route::get('user/{user}/appointments', 'AppointmentController@index');
+    Route::get('user/{user}/appointments/history', 'AppointmentController@indexHistory');
 });
 
 Route::group(['middleware' => 'api-header'], function () {
