@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -16,6 +17,7 @@ import SubmitAppointment from './appointments/SubmitAppointment';
 import Appointments from './appointments/Appointments';
 import Home from './Home';
 import History from './history/History';
+import Profile from './patient/Profile';
 
 export default class App extends Component {
     constructor(props){
@@ -87,6 +89,9 @@ export default class App extends Component {
                     </PrivateRoute>
                     <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/medical_history">
                         <History user={this.state.user}/>
+                    </PrivateRoute>                    
+                    <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/profile">
+                        <Profile user={this.state.user}/>
                     </PrivateRoute>                    
                     <LoginRoute isLoggedIn={this.state.isLoggedIn} path="/register">
                         <Register authSuccess={this.authSuccess}/>
