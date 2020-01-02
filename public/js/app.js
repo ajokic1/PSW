@@ -94584,6 +94584,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_datepicker_dist_react_datepicker_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_datepicker_dist_react_datepicker_css__WEBPACK_IMPORTED_MODULE_3__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -94625,6 +94633,23 @@ function (_Component) {
           label: appType.name
         };
       });
+      var names = this.props.clinics.map(function (clinic) {
+        return {
+          value: clinic.name,
+          label: clinic.name
+        };
+      });
+
+      var distinctCities = _toConsumableArray(new Set(this.props.clinics.map(function (clinic) {
+        return clinic.city;
+      })));
+
+      var cities = distinctCities.map(function (city) {
+        return {
+          value: city,
+          label: city
+        };
+      });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "form-label"
       }, "Tip pregleda:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_1__["default"], {
@@ -94639,7 +94664,21 @@ function (_Component) {
         onChange: this.props.setDate,
         dateFormat: "dd.MM.yyyy",
         placeholderText: "Odaberi datum pregleda"
-      })));
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "form-label mt-3"
+      }, "Naziv klinike:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        isClearable: true,
+        name: "name",
+        options: names,
+        onChange: this.props.handleChange
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "form-label mt-3"
+      }, "Grad:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        isClearable: true,
+        name: "city",
+        options: cities,
+        onChange: this.props.handleChange
+      }));
     }
   }]);
 
@@ -94897,6 +94936,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _partials_Overlay__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../partials/Overlay */ "./resources/js/components/partials/Overlay.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -94939,7 +94980,9 @@ function (_Component) {
       appointmentTypeId: -1,
       availability: [],
       needsFiltering: false,
-      date: null
+      date: null,
+      name: "",
+      city: ""
     };
     _this.handleSelect = _this.handleSelect.bind(_assertThisInitialized(_this));
     _this.filterClinics = _this.filterClinics.bind(_assertThisInitialized(_this));
@@ -94985,6 +95028,11 @@ function (_Component) {
             };
           });
         }
+      } else {
+        var _this$setState, _this$setState2;
+
+        if (target.action == 'select-option') this.setState((_this$setState = {}, _defineProperty(_this$setState, target.name, selectedOption.value), _defineProperty(_this$setState, "needsFiltering", true), _this$setState));
+        if (target.action == 'clear') this.setState((_this$setState2 = {}, _defineProperty(_this$setState2, target.name, ""), _defineProperty(_this$setState2, "needsFiltering", true), _this$setState2));
       }
     }
   }, {
@@ -95014,11 +95062,38 @@ function (_Component) {
       if (this.state.clinics && this.state.needsFiltering) {
         var appointmentType = this.state.appointmentTypes.find(function (t) {
           return t.id = _this4.state.appointmentTypeId;
-        });
+        }); // Filter definitions
+
+        var filterByAppType = function filterByAppType(clinic) {
+          if (this.state.appointmentTypeId != -1) return clinic.appointment_types.includes(this.state.appointmentTypeId);else return true;
+        };
+
+        var filterByAvailability = function filterByAvailability(clinic) {
+          if (this.state.availability.length > 0 && this.state.date) {
+            return this.state.availability.some(function (a) {
+              return a.clinic_id == clinic.id && a.duration > appointmentType.duration;
+            });
+          } else return true;
+        };
+
+        var filterByName = function filterByName(clinic) {
+          if (this.state.name) {
+            return clinic.name == this.state.name;
+          } else return true;
+        };
+
+        var filterByCity = function filterByCity(clinic) {
+          if (this.state.city) {
+            return clinic.city == this.state.city;
+          } else return true;
+        };
+
+        var filters = [filterByAppType.bind(this), filterByAvailability.bind(this), filterByName.bind(this), filterByCity.bind(this)]; //Filtering
+
         var filteredClinics = this.state.clinics.filter(function (clinic) {
-          return clinic.appointment_types.includes(_this4.state.appointmentTypeId) && (_this4.state.availability.length > 0 ? _this4.state.availability.some(function (a) {
-            return a.clinic_id == clinic.id && a.duration > appointmentType.duration;
-          }) : true);
+          return filters.every(function (filterFunction) {
+            return filterFunction(clinic);
+          });
         });
         this.setState(function (state, props) {
           return {
@@ -95041,7 +95116,10 @@ function (_Component) {
         appointmentTypes: this.state.appointmentTypes,
         handleChange: this.handleSelect,
         date: this.state.date,
-        setDate: this.setDate
+        setDate: this.setDate,
+        clinics: this.state.clinics,
+        name: this.state.name,
+        city: this.state.city
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "overflow-auto col-lg-9 col-md-8 col-sm-7 bg-white h-100"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ClinicList__WEBPACK_IMPORTED_MODULE_1__["default"], {

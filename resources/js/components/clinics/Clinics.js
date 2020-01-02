@@ -17,6 +17,8 @@ export default class Clinics extends Component {
             availability: [],
             needsFiltering: false,
             date: null,
+            name: "",
+            city: "",
         }
         this.handleSelect = this.handleSelect.bind(this);
         this.filterClinics = this.filterClinics.bind(this);
@@ -46,6 +48,12 @@ export default class Clinics extends Component {
                     filteredClinics:state.clinics}))
             }
         }
+        else {
+            if(target.action=='select-option')
+                this.setState({[target.name]: selectedOption.value, needsFiltering: true});
+            if(target.action=='clear')
+                this.setState({[target.name]: "", needsFiltering: true});
+        }
 
     }
     setDate(date){
@@ -60,16 +68,47 @@ export default class Clinics extends Component {
         }
     }
     filterClinics() {
-        if(this.state.clinics 
-            && this.state.needsFiltering){
+        if(this.state.clinics && this.state.needsFiltering){
             const appointmentType = this.state.appointmentTypes
                 .find(t => t.id = this.state.appointmentTypeId);
-            const filteredClinics = this.state.clinics.filter(clinic => 
-                clinic.appointment_types.includes(this.state.appointmentTypeId)
-                && (this.state.availability.length > 0
-                    ? this.state.availability.some(a => a.clinic_id == clinic.id 
-                        && a.duration>appointmentType.duration)
-                    : true));
+
+            // Filter definitions
+            const filterByAppType = function(clinic) {
+                if(this.state.appointmentTypeId!=-1)
+                    return clinic.appointment_types.includes(this.state.appointmentTypeId);
+                else return true;
+            }
+            const filterByAvailability = function(clinic) {
+                if(this.state.availability.length>0 && this.state.date) {
+                    return this.state.availability.some(a => a.clinic_id == clinic.id 
+                        && a.duration>appointmentType.duration);
+                }
+                else return true;
+            }
+            const filterByName = function(clinic) {
+                if(this.state.name) {
+                    return clinic.name == this.state.name;
+                }
+                else return true;
+            }
+            const filterByCity = function(clinic) {
+                if(this.state.city) {
+                    return clinic.city == this.state.city;
+                }
+                else return true
+            }
+
+            const filters = [
+                filterByAppType.bind(this),
+                filterByAvailability.bind(this),
+                filterByName.bind(this),
+                filterByCity.bind(this),
+            ];            
+            
+            //Filtering
+            const filteredClinics = this.state.clinics.filter(clinic =>
+                filters.every(filterFunction => filterFunction(clinic))
+            );
             this.setState((state, props) => ({
                 filteredClinics: filteredClinics,
                 needsFiltering: false, 
@@ -86,7 +125,10 @@ export default class Clinics extends Component {
                             appointmentTypes={this.state.appointmentTypes} 
                             handleChange={this.handleSelect}
                             date={this.state.date}
-                            setDate={this.setDate}/>
+                            setDate={this.setDate}
+                            clinics={this.state.clinics}
+                            name={this.state.name}
+                            city={this.state.city}/>
                     </Sidebar>
                 </div>                
                 <div className='overflow-auto col-lg-9 col-md-8 col-sm-7 bg-white h-100'>
