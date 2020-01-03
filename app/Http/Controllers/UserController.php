@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use App\User;
 use JWTAuth;
 use JWTAuthException;
+use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     private function getToken($email, $password)
@@ -134,5 +135,21 @@ class UserController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
+    }
+
+    public function update(Request $request) {
+        $user = Auth::user();
+        $validated = $request->validate([
+            'password'=>'nullable',            
+            'first_name'=>'required',
+            'last_name'=>'required',
+            'address'=>'required',
+            'city'=>'required',
+            'country'=>'required',
+            'phone_no'=>'required',
+            'photo'=>'nullable',
+        ]);
+        $user->update($validated);
+        return ['success'=>true, 'user'=>$user];
     }
 }

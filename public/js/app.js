@@ -93136,6 +93136,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _appointments_Appointments__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./appointments/Appointments */ "./resources/js/components/appointments/Appointments.js");
 /* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Home */ "./resources/js/components/Home.js");
 /* harmony import */ var _history_History__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./history/History */ "./resources/js/components/history/History.js");
+/* harmony import */ var _patient_Profile__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./patient/Profile */ "./resources/js/components/patient/Profile.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -93153,6 +93154,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -93276,6 +93278,12 @@ function (_Component) {
         path: "/medical_history"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_history_History__WEBPACK_IMPORTED_MODULE_16__["default"], {
         user: this.state.user
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_PrivateRoute__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        isLoggedIn: this.state.isLoggedIn,
+        path: "/profile"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_patient_Profile__WEBPACK_IMPORTED_MODULE_17__["default"], {
+        user: this.state.user,
+        authSuccess: this.authSuccess
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_LoginRoute__WEBPACK_IMPORTED_MODULE_5__["default"], {
         isLoggedIn: this.state.isLoggedIn,
         path: "/register"
@@ -93961,16 +93969,7 @@ function (_Component) {
       });
       axios.post('api/login', formData).then(function (json) {
         if (json.data.success) {
-          var user = {
-            first_name: json.data.data.first_name,
-            last_name: json.data.data.last_name,
-            id: json.data.data.id,
-            email: json.data.data.email,
-            auth_token: json.data.data.auth_token,
-            role: json.data.data.role
-          };
-
-          _this2.props.authSuccess(true, user);
+          _this2.props.authSuccess(true, json.data.data);
         } else if (json.data.emailNotVerified) _this2.props.authSuccess(false, {}, true);else _this2.props.authSuccess(false, {});
       })["catch"](function (error) {
         console.log(error);
@@ -96019,7 +96018,7 @@ function (_Component) {
         id: "overlay",
         className: "position-fixed dark-overlay w-100 h-100 overflow-auto",
         onClick: this.handleClick
-      }, children, "am");
+      }, children);
     }
   }]);
 
@@ -96152,6 +96151,372 @@ function (_Component) {
   }]);
 
   return Sidebar;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/patient/EditOverlay.js":
+/*!********************************************************!*\
+  !*** ./resources/js/components/patient/EditOverlay.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return EditOverlay; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+var EditOverlay =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(EditOverlay, _Component);
+
+  function EditOverlay(props) {
+    var _this;
+
+    _classCallCheck(this, EditOverlay);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(EditOverlay).call(this, props));
+    _this.state = {
+      first_name: '',
+      last_name: '',
+      password: '',
+      confirm_password: '',
+      address: '',
+      city: '',
+      country: '',
+      phone_no: '',
+      pogresanPass: false,
+      submitting: false,
+      done: false
+    };
+    _this.form = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
+    _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(EditOverlay, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.setState({
+        first_name: this.props.user.first_name,
+        last_name: this.props.user.last_name,
+        address: this.props.user.address,
+        city: this.props.user.city,
+        country: this.props.user.country,
+        phone_no: this.props.user.phone_no
+      });
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(event) {
+      event.preventDefault();
+
+      if (this.form.current.reportValidity()) {
+        this.updateUser(event);
+      }
+    }
+  }, {
+    key: "handleChange",
+    value: function handleChange(event) {
+      this.setState(_defineProperty({}, event.target.name, event.target.value));
+
+      if (event.target.name === 'confirm_password') {
+        if (this.state.password !== event.target.value) this.setState({
+          pogresanPass: true
+        });else this.setState({
+          pogresanPass: false
+        });
+      }
+    }
+  }, {
+    key: "updateUser",
+    value: function updateUser(event) {
+      var _this2 = this;
+
+      var formData = new FormData();
+      if (this.state.password) formData.append("password", this.state.password);
+      formData.append("first_name", this.state.first_name);
+      formData.append("last_name", this.state.last_name);
+      formData.append("address", this.state.address);
+      formData.append("city", this.state.city);
+      formData.append("country", this.state.country);
+      formData.append("phone_no", this.state.phone_no);
+      this.setState({
+        submitting: true
+      });
+      axios.post('/api/user/update', formData).then(function (json) {
+        if (json.data.success) {
+          _this2.props.authSuccess(true, json.data.user, false);
+        } else _this2.props.authSuccess(false);
+
+        _this2.setState({
+          done: true
+        });
+      })["catch"](function (error) {
+        console.log(error);
+
+        _this2.props.authSuccess(false);
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      if (this.state.done) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
+        to: "/profile"
+      });
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "w-75 bg-white mx-auto mt-5 p-5 rounded"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        className: "d-block text-center my-4"
+      }, "Izmjena podataka"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        ref: this.form,
+        className: "row needs-validation",
+        method: "post",
+        noValidate: true
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-sm-6"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "first_name"
+      }, "Ime:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "first_name",
+        value: this.state.first_name,
+        onChange: this.handleChange,
+        type: "text",
+        className: "form-control",
+        name: "first_name",
+        required: true
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, "Unesite va\u0161e ime.")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "last_name"
+      }, "Prezime:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "last_name",
+        value: this.state.last_name,
+        onChange: this.handleChange,
+        type: "text",
+        className: "form-control",
+        name: "last_name",
+        required: true
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, "Unesite va\u0161e prezime.")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "password"
+      }, "Password:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "password",
+        value: this.state.password,
+        onChange: this.handleChange,
+        type: "password",
+        className: "form-control",
+        name: "password"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, "Unesite \u017Eeljeni password.")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "confirm_password"
+      }, "Potvrdite password:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "confirm_password",
+        value: this.state.confirm_password,
+        onChange: this.handleChange,
+        type: "password",
+        className: "form-control",
+        name: "confirm_password"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, "Ponovite prethodno uneseni password."), this.state.pogresanPass && this.state.confirm_password && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "small text-danger"
+      }, "Ponovite prethodno uneseni password."))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-sm-6"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "address"
+      }, "Ulica i broj:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "address",
+        value: this.state.address,
+        onChange: this.handleChange,
+        type: "text",
+        className: "form-control",
+        name: "address",
+        required: true
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, "Unesite ku\u0107nu adresu.")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "city"
+      }, "Grad:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "city",
+        value: this.state.city,
+        onChange: this.handleChange,
+        type: "text",
+        className: "form-control",
+        name: "city",
+        required: true
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, "Unesite grad.")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "country"
+      }, "Dr\u017Eava:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "country",
+        value: this.state.country,
+        onChange: this.handleChange,
+        type: "text",
+        className: "form-control",
+        name: "country",
+        required: true
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, "Unesite dr\u017Eavu.")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "phone_no"
+      }, "Broj telefona:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "phone_no",
+        value: this.state.phone_no,
+        onChange: this.handleChange,
+        type: "text",
+        className: "form-control",
+        name: "phone_no",
+        required: true
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, "Unesite broj telefona.")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "text-right form-group"
+      }, this.state.submitting ? "Submitting..." : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "submit",
+        onClick: this.handleSubmit,
+        className: "btn btn-primary mt-5",
+        value: "Sa\u010Duvaj izmjene"
+      })))));
+    }
+  }]);
+
+  return EditOverlay;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/patient/Profile.js":
+/*!****************************************************!*\
+  !*** ./resources/js/components/patient/Profile.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Profile; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _partials_Overlay__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partials/Overlay */ "./resources/js/components/partials/Overlay.js");
+/* harmony import */ var _EditOverlay__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./EditOverlay */ "./resources/js/components/patient/EditOverlay.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+var Profile =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(Profile, _Component);
+
+  function Profile() {
+    _classCallCheck(this, Profile);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Profile).apply(this, arguments));
+  }
+
+  _createClass(Profile, [{
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container my-4"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+        className: "mb-4"
+      }, this.props.user.first_name + ' ' + this.props.user.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-sm-3"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        className: "img-fluid",
+        src: '/images/' + this.props.user.photo
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "col-sm-9"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "Ime: "), this.props.user.first_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "Prezime: "), this.props.user.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "E-mail: "), this.props.user.email), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "Adresa: "), this.props.user.address), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "Grad: "), this.props.user.city), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "Dr\u017Eava: "), this.props.user.country), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "Telefon: "), this.props.user.phone_no), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "Jedinstveni broj osiguranika: "), this.props.user.insurance_no), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/profile/edit"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-primary"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        "class": "fas fa-edit mr-2"
+      }), "Izmijeni podatke"))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+        path: "/profile/edit"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Overlay__WEBPACK_IMPORTED_MODULE_2__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_EditOverlay__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        user: this.props.user,
+        authSuccess: this.props.authSuccess
+      }))));
+    }
+  }]);
+
+  return Profile;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 

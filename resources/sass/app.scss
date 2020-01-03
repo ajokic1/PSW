@@ -45,6 +45,10 @@ body, html, #root {
 
 .dark-overlay {
     background-color: rgba(0,0,0,0.8);
+    top:3.5rem;
+    left: 0;
+    right: 0;
+    z-index: 1030;
 }
 
 .card-img-left {
