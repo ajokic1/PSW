@@ -91,7 +91,7 @@ export default class App extends Component {
                         <History user={this.state.user}/>
                     </PrivateRoute>                    
                     <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/profile">
-                        <Profile user={this.state.user}/>
+                        <Profile user={this.state.user} authSuccess={this.authSuccess}/>
                     </PrivateRoute>                    
                     <LoginRoute isLoggedIn={this.state.isLoggedIn} path="/register">
                         <Register authSuccess={this.authSuccess}/>
