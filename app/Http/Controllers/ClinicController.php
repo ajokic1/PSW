@@ -12,7 +12,7 @@ class ClinicController extends Controller
         $this->middleware('auth');
         $this->middleware('admin')->except(['index', 'show']);
     }
-    
+
     /**
      * Display a listing of all clinics.
      *
@@ -50,16 +50,16 @@ class ClinicController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Clinic  $clinic
-     * @return \Illuminate\Http\Response
+     * @return \App\Clinic
      */
     public function show(Clinic $clinic)
     {
         $canRate = false;
-        $user = Auth::user();
-        $user->loadCount(['appointments' => function ($query) use ($clinic) {
-                $query->where('clinic_id', $clinic->id);
+        $user = Auth::id();
+        $clinic->loadCount(['appointments' => function ($query) use ($user) {
+                $query->where('user_id', $user);
             }]);
-        if($user->appointments_count>0) {
+        if($clinic->appointments_count>0) {
             $canRate=true;
         }
 
