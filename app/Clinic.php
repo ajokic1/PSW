@@ -9,6 +9,7 @@ class Clinic extends Model
 {
     protected $guarded=[];
     protected $hidden=['created_at', 'updated_at'];
+    protected $appends=['rating'];
     
 
     public function clinic_ratings() {
@@ -46,5 +47,13 @@ class Clinic extends Model
             ->join('appointment_types', 'appointments.appointment_type_id', '=', 'appointment_types.id')
             ->select('appointments.id', 'appointments.time', 'appointment_types.duration')
             ->get();
+    }
+    public function getRatingAttribute() {
+        $ratings = $this->clinic_ratings;
+        $sum_ratings = $ratings->reduce(function($carry, $item){
+            return $carry + $item->rating;
+        });
+        if($ratings->count()==0) return 0;
+        return $sum_ratings / $ratings->count();
     }
 }

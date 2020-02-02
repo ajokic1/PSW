@@ -22,6 +22,7 @@ export default class DoctorCard extends Component {
             <div style={photoStyle} className="h-100 col-sm-4 card-body p-0 m-0 card-img-left"/>
             <div className="col-sm-8 card-body">
                 <h5 className="card-title">{this.props.doctor.first_name + ' ' + this.props.doctor.last_name}</h5>
+                <div className="card-text">Ocjena: {this.props.doctor.rating}</div>
                 <div className="card-text">Slobodni termini:</div>
                 <div className="card-text">{this.props.availability.map(a => availableTime(a) + ', ')}</div>
             </div>

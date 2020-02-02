@@ -23,7 +23,7 @@ class Doctor extends Model
     }
 
     public function ratings() {
-        return $this->hasMany('App\Rating');
+        return $this->hasMany('App\DoctorRating');
     }
 
     public function predef_appointments() {
@@ -42,12 +42,11 @@ class Doctor extends Model
         return $appointment_types;
     }
     public function getRatingAttribute() {
-        /*$avg_rating=0;
         $ratings = $this->ratings;
         $sum_ratings = $ratings->reduce(function($carry, $item){
             return $carry + $item->rating;
         });
-        return $sum_ratings / $ratings->count();*/
-        return 4;
+        if($ratings->count() == 0) return 0;
+        return $sum_ratings / $ratings->count();
     }
 }

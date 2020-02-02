@@ -41,6 +41,12 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
     Route::get('user/{user}/appointments', 'AppointmentController@index');
     Route::get('user/{user}/appointments/history', 'AppointmentController@indexHistory');
     Route::post('user/update', 'UserController@update');
+
+    Route::post('doctors/{doctor}/rate', 'DoctorRatingController@rate');
+    Route::get('doctors/{doctor}/rating', 'DoctorRatingController@rating');
+
+    Route::post('clinics/{clinic}/rate', 'ClinicRatingController@rate');
+    Route::get('clinics/{clinic}/rating', 'ClinicRatingController@rating');
 });
 
 Route::group(['middleware' => 'api-header'], function () {

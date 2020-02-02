@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Clinic;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class ClinicController extends Controller
@@ -13,9 +14,9 @@ class ClinicController extends Controller
     }
     
     /**
-     * Display a listing of the resource.
+     * Display a listing of all clinics.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response $clinics
      */
     public function index()
     {
@@ -23,16 +24,6 @@ class ClinicController extends Controller
             return $clinic->append(['appointment_types', 'doctor_ids', 'appointments_from_duration']);
         });
         return $clinics;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -63,21 +54,19 @@ class ClinicController extends Controller
      */
     public function show(Clinic $clinic)
     {
+        $canRate = false;
+        $user = Auth::user();
+        $user->loadCount(['appointments' => function ($query) use ($clinic) {
+                $query->where('clinic_id', $clinic->id);
+            }]);
+        if($user->appointments_count>0) {
+            $canRate=true;
+        }
+
+        $clinic['canRate']=$canRate;
         $clinic['doctors']=$clinic->doctors;
         return $clinic;
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Clinic  $clinic
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Clinic $clinic)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      *

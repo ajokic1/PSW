@@ -3,83 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\ClinicRating;
+use App\Clinic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClinicRatingController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Rate a visited clinic.
      *
+     * @param  \App\Clinic $clinic
+     * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function rate(Clinic $clinic, Request $request)
     {
-        //
+        if(is_int($request->rating) and $request->rating>0 and $request->rating<6)
+        { 
+            $user = Auth::user();
+
+            $user->loadCount(['appointments' => function ($query) use ($clinic) {
+                $query->where('clinic_id', $clinic->id);
+            }]);
+
+            if($user->appointments_count>0) {
+                $clinic_rating = $user->clinic_ratings()
+                    ->where('clinic_id', $clinic->id)->firstOrNew();
+                $clinic_rating->user_id = $user->id;
+                $clinic_rating->clinic_id = $clinic->id;
+                $clinic_rating->rating = $request->rating;
+                $clinic_rating->comment = $request->comment;
+                $clinic_rating->save();
+                return $clinic->rating;
+
+            } else return response('User can only rate visited clinics', 403);
+        }
+        else return response('Rating must be an integer with a value of 1-5.', 400);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Get a clinic's average rating.
      *
+     * @param  \App\Clinic $clinic
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\ClinicRating  $clinicRating
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ClinicRating $clinicRating)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\ClinicRating  $clinicRating
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ClinicRating $clinicRating)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ClinicRating  $clinicRating
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ClinicRating $clinicRating)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\ClinicRating  $clinicRating
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ClinicRating $clinicRating)
-    {
-        //
+    public function rating(Clinic $clinic)
+    {  
+        return $clinic->rating;
     }
 }
