@@ -4,11 +4,9 @@ namespace Tests\Unit;
 
 use App\Appointment;
 use App\Clinic;
-use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\LoginAsAdmin;
 use Tests\TestCase;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class ClinicTest extends TestCase
