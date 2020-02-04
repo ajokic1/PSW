@@ -1,9 +1,10 @@
 <?php
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\User;
-use JWTAuth;
-use JWTAuthException;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
@@ -19,7 +20,7 @@ class UserController extends Controller
                     'token'=>$token
                 ]);
             }
-        } catch (JWTAuthException $e) {
+        } catch (JWTException $e) {
             return response()->json([
                 'response' => 'error',
                 'message' => 'Token creation failed',
@@ -38,18 +39,18 @@ class UserController extends Controller
             if($user->email_verified_at == NULL){
                 $response = ['success'=>false, 'emailNotVerified'=>true];
             } else
-            $response = ['success'=>true, 'data'=>$user];           
+            $response = ['success'=>true, 'data'=>$user];
         }
-        else 
+        else
           $response = ['success'=>false, 'data'=>'Record doesnt exists'];
-      
+
         return response()->json($response, 201);
     }
     public function register(Request $request)
-    { 
+    {
         $validated = $request->validate([
             'email'=>'required|unique:users',
-            'password'=>'nullable',            
+            'password'=>'nullable',
             'first_name'=>'required',
             'last_name'=>'required',
             'address'=>'required',
@@ -63,29 +64,29 @@ class UserController extends Controller
         ]);
         $validated['password'] = \Hash::make($request->password);
         $validated['role']='patient';
-        $validated['auth_token']='';          
+        $validated['auth_token']='';
         $user = new \App\User($validated);
         if ($user->save())
         {
-            
+
             $token = self::getToken($request->email, $request->password); // generate user token
-            
+
             if (!is_string($token))  return response()->json(['success'=>false,'data'=>'Token generation failed'], 201);
-            
+
             $user = \App\User::where('email', $request->email)->get()->first();
-            
+
             $user->auth_token = $token; // update user token
-            
+
             $user->sendApiEmailVerificationNotification();
 
             $user->save();
-            
-            $response = ['success'=>true, 'emailNotVerified'=>true];        
+
+            $response = ['success'=>true, 'emailNotVerified'=>true];
         }
         else
             $response = ['success'=>false, 'data'=>'Couldnt register user'];
-        
-        
+
+
         return response()->json($response, 201);
     }
 
@@ -140,7 +141,7 @@ class UserController extends Controller
     public function update(Request $request) {
         $user = Auth::user();
         $validated = $request->validate([
-            'password'=>'nullable',            
+            'password'=>'nullable',
             'first_name'=>'required',
             'last_name'=>'required',
             'address'=>'required',

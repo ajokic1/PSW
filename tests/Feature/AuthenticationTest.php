@@ -2,31 +2,24 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use UsersTableSeeder;
 
-class UserTest extends TestCase
+class AuthenticationTest extends TestCase
 {
+
     /**
      * Test registration of new user
      *
      * @return  void
      */
     public function testRegistration() {
-        $response = $this->json('POST', '/api/register', [
-            'email'=>'aj.jokic@gmail.com',
-            'password'=>'12345678',            
-            'first_name'=>'Test',
-            'last_name'=>'User',
-            'address'=>'Test address',
-            'city'=>'Test city',
-            'country'=>'Test country',
-            'phone_no'=>'123123123',
-            'insurance_no'=>'123123123',
-        ]);
-
+        $user = factory(User::class)->make(['role' => 'patient', 'email' => 'test@test.test']);
+        $response = $this->json('POST', '/api/register', $user->toArray());
+        var_dump($response->getOriginalContent());
         $response
             ->assertStatus(201)
             ->assertJson([
@@ -37,30 +30,29 @@ class UserTest extends TestCase
 
     /**
      * Test login
-     * 
+     *
      * @return void
      */
     public function testLogin() {
-        $this->seed(UsersTableSeeder::class);
+        $user = factory(User::class)->create(['role' => 'patient', 'email' => 'test@test.test']);
         $response = $this->json('POST', '/api/login', [
             'email' => 'test@test.test',
-            'password' => '12345678'
+            'password' => 'password'
         ]);
         $response
             ->assertStatus(201)
             ->assertJson([
-                'success' => false,
-                'emailNotVerified' => true,
+                'success' => true,
             ]);
 
         //Test JWT
         $response = $this
-            ->withHeaders(['Authorization' => 'Bearer' . 
-                \JWTAuth::fromUser(\App\User::where('email','test@test.test')->first())]) 
+            ->withHeaders(['Authorization' => 'Bearer' .
+                \JWTAuth::fromUser(User::where('email','test@test.test')->first())])
             ->json('POST', '/api/logout', []);
         $response
             ->assertStatus(200);
     }
 
-    
+
 }
