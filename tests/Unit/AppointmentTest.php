@@ -17,13 +17,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
+use Tests\LoginAsPatient;
 use Tests\TestCase;
 use Tests\LoginAsAdmin;
 
 class AppointmentTest extends TestCase
 {
     use RefreshDatabase;
-    use LoginAsAdmin;
+    use LoginAsPatient;
 
     // =================================================================================================================
     // AppointmentController
@@ -194,7 +195,7 @@ class AppointmentTest extends TestCase
             ->where('clinic_id',1)
             //->havingRaw('\'time\' + \'duration\' AS end_time > '.$end_time)
             ->get();
-        
+
         $this->assertTrue($availabilities[0]->time == '08:00:00');
         $this->assertTrue($availabilities[0]->duration == '01:00:00');
         $this->assertTrue($availabilities[1]->time == '09:30:00');
