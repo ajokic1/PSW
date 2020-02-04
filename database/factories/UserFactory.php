@@ -27,8 +27,8 @@ $factory->define(User::class, function (Faker $faker) {
         'city' => $faker->city,
         'country' => $faker->country,
         'phone_no' => $faker->phoneNumber,
-        'insurance_no' => $faker->asciify('****************'),
-        'role' => 'user',
-        'auth_token' => $faker->asciify('********************')
+        'insurance_no' => $faker->lexify('??????????????'),
+        'role' => 'patient',
+        'auth_token' => $faker->lexify('??????????????????')
     ];
 });

@@ -9,7 +9,7 @@ $factory->define(Appointment::class, function (Faker $faker) {
     return [
         'date' => $faker->date(),
         'time' => $faker->time(),
-        'token' => $faker->asciify('**************')
+        'token' => $faker->lexify('??????????')
     ];
 
 

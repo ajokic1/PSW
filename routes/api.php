@@ -18,24 +18,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['jwt.auth','api-header']], function () {
-  
-    // all routes to protected resources are registered here  
+
+    // all routes to protected resources are registered here
     Route::post('logout', 'UserController@logout');
 
     Route::resource('clinics', 'ClinicController');
     Route::resource('appointment_types', 'AppointmentTypeController');
     Route::resource('appointments', 'AppointmentController');
     Route::resource('diagnoses', 'DiagnosisController');
-    
-    //Route::get('clinics/{clinic}/doctors/{doctor}/availability/{date}/{duration}', 
+
+    //Route::get('clinics/{clinic}/doctors/{doctor}/availability/{date}/{duration}',
     //    'DoctorController@availability');
 
     Route::get('availability/date/{date}',
         'AvailabilityController@get');
-    
+
     Route::get('appointments/details/{doctor}/{clinic}/{appointment_type}/{date}',
         'AppointmentController@details');
-    Route::get('appointments/{appointment}/decline/{token}', 
+    Route::get('appointments/{appointment}/decline/{token}',
         'AppointmentController@decline');
 
     Route::get('user/{user}/appointments', 'AppointmentController@index');
@@ -50,15 +50,18 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
 });
 
 Route::group(['middleware' => 'api-header'], function () {
-  
-    // The registration and login requests doesn't come with tokens 
+
+    // The registration and login requests doesn't come with tokens
     // as users at that point have not been authenticated yet
     // Therefore the jwtMiddleware will be exclusive of them
     Route::post('login', 'UserController@login');
     Route::post('register', 'UserController@register');
 
-    Route::get('appointments/{appointment}/accept/{token}', 
+    Route::get('appointments/{appointment}/accept/{token}',
         'AppointmentController@accept');
+
+    Route::get('appointments/{appointment}/decline/{token}',
+        'AppointmentController@decline');
 
     Route::get('email/verify/{id}', 'ApiVerificationController@verify')
         ->name('verificationapi.verify');
