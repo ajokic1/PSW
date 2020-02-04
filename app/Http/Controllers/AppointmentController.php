@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Appointment;
 use App\Events\AppointmentAccepted;
 use App\Events\AppointmentCancelled;
+use App\Http\Requests\StoreAppointmentRequest;
+use App\Services\AppointmentService;
 use \Exception;
 use App\Doctor;
 use App\Clinic;
@@ -13,6 +15,7 @@ use App\AppointmentType;
 use App\Availability;
 use App\Mail\AppointmentApproved;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
@@ -20,10 +23,17 @@ use Illuminate\Support\Str;
 
 class AppointmentController extends Controller
 {
+    private $appointmentService;
+
+    public function __construct(AppointmentService $appointmentService)
+    {
+        $this->appointmentService = $appointmentService;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(User $user)
     {
@@ -47,7 +57,7 @@ class AppointmentController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -55,76 +65,45 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new appointment.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreAppointmentRequest $request
+     * @return Response
+     * @throws Exception
      */
-    public function store(Request $request)
+    public function store(StoreAppointmentRequest $request)
     {
-        //DB::transaction(function() {
-            $validated = $request->validate([
-                'user_id'=>'nullable',
-                'doctor_id'=>'required',
-                'clinic_id'=>'required',
-                'appointment_type_id'=>'required',
-                'date'=>'required',
-                'time'=>'required',
-            ]);
-            $validated['token'] = Str::random(16);
-            $validated['user_id'] = Auth::id();
-            //if(Auth::id()!=$validated['user_id']){
-            //    throw new Exception('Appointment user_id doesn\'t match id of logged in user');}
-            if(!$this->isAvailable($validated)){
-                throw new Exception('The selected appointment time is not available');
-            } else {
-                $appointment = Appointment::create($validated);
-            }
-        //});
-        if($appointment) {
+        DB::beginTransaction();
+
+        $appointment = null;
+        $validated = $request->validated();
+        $validated['token'] = Str::random(16);
+        if(!$this->appointmentService->isAvailable($validated)){
+            DB::rollBack();
+            return response('Appointment time not available', 400);
+        } else {
+            $appointment = Appointment::create($validated);
+        }
+        if(!is_null($appointment)) {
             $data = [];
             Mail::to(Auth::user()->email)
                 ->send(new AppointmentApproved($appointment, $data));
-            event(new AppointmentAccepted($appointment));
+            DB::commit();
             return response('Appointment successfully created', 201);
         }
-        else return response('Appointment creation failed', 400);
-        
-    }
-
-    public function isAvailable($validated) {
-        $doctor = Doctor::find($validated['doctor_id']);
-        $clinic = $doctor->clinics->find($validated['clinic_id']);
-        $work_start = strtotime($clinic->pivot->works_from, 0);
-        $work_end = strtotime($clinic->pivot->works_to,0);
-
-        $appointment_type = AppointmentType::find($validated['appointment_type_id']);
-        $start_time = strtotime($validated['time'], 0);
-        $end_time = $start_time + strtotime($appointment_type->duration, 0); 
-
-        if($start_time<$work_start || $end_time>$work_end){            
-            return false;
+        else {
+            DB::rollBack();
+            return response('Appointment creation failed', 400);
         }
-        if($doctor->appointments->where('date',$validated['date'])){
-            foreach ($doctor->appointments->where('date',$validated['date']) as $appointment) {
-                if(!($end_time <= strtotime($appointment->time,0) 
-                        || $start_time >= strtotime($appointment->appointment_type->duration,0)
-                        +strtotime($appointment->time,0))){
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     public function accept(Appointment $appointment, $token) {
-        if($appointment->token == $token){
+        if($appointment->token == $token) {
             $appointment->accepted = true;
             event(new AppointmentAccepted($appointment));
             $appointment->save();
             return response('Appointment accepted',200);
-        }
-        return response('Invalid token', 400);
+        } else return response('Invalid token', 400);
     }
 
     public function decline(Appointment $appointment, $token) {
@@ -140,7 +119,7 @@ class AppointmentController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Appointment  $appointment
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Appointment $appointment)
     {
@@ -151,7 +130,7 @@ class AppointmentController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Appointment  $appointment
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Appointment $appointment)
     {
@@ -163,7 +142,7 @@ class AppointmentController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Appointment  $appointment
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Appointment $appointment)
     {
@@ -174,7 +153,7 @@ class AppointmentController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Appointment  $appointment
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Appointment $appointment)
     {
@@ -217,7 +196,7 @@ class AppointmentController extends Controller
                 $curr = $curr + $step;
             }
         }
-        $data['availability'] = $available_times;        
+        $data['availability'] = $available_times;
         return $data;
     }
 }
