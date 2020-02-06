@@ -14,7 +14,7 @@ export default class ClinicOverlay extends Component {
             rating: '',
             needsFiltering: false,
             currentRating: 0,
-        }
+        };
 
         this.filterDoctors = this.filterDoctors.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -37,18 +37,18 @@ export default class ClinicOverlay extends Component {
     }
     filterDoctors() {
         if(this.state.clinic.doctors){
-            const filteredDoctors = this.state.clinic.doctors.filter(doctor => 
-            (this.state.name=='' || 
+            const filteredDoctors = this.state.clinic.doctors.filter(doctor =>
+            (this.state.name=='' ||
                 (doctor.first_name + ' ' + doctor.last_name).toLowerCase()
                 .includes(event.target.value.toLowerCase()))
-            && (this.props.appointmentTypeId==-1 || 
+            && (this.props.appointmentTypeId==-1 ||
                 doctor.appointment_types.includes(this.props.appointmentTypeId))
             && (this.state.rating=='' ||
                 doctor.rating >= this.state.rating)
 
         );
-        this.setState({filteredDoctors: filteredDoctors, needsFiltering: false});    
-        }       
+        this.setState({filteredDoctors: filteredDoctors, needsFiltering: false});
+        }
     }
     changeRating( newRating, name ) {
       this.setState({ currentRating: newRating });
@@ -63,16 +63,16 @@ export default class ClinicOverlay extends Component {
         if(this.state.needsFiltering) this.filterDoctors();
         return (
                 <div className='w-75 bg-white mx-auto mt-5 p-5 rounded'>
-                    {this.state.clinic 
+                    {this.state.clinic
                         ? <div>
                             <h1>{this.state.clinic.name}</h1>
                             <hr className='mb-4'/>
-                            <div className='row mb-4'>                            
+                            <div className='row mb-4'>
                                 <div className='col-md-5'>
-                                    <img className='img-fluid' src={'/images/'+this.state.clinic.photo}/>
+                                    <img className='img-fluid' src={'/images/'+this.state.clinic.photo} alt='Clinic photo'/>
                                 </div>
                                 <div className='col-md-7'>
-                                    <p>Ocjena: <StarRatings starRatedColor='red' rating={this.state.clinic.rating}/> 
+                                    <p>Ocjena: <StarRatings starRatedColor='red' rating={this.state.clinic.rating}/>
                                         {this.state.clinic.rating}</p>
                                     { this.state.clinic.canRate &&
                                         <p> Ocijeni:
@@ -91,26 +91,25 @@ export default class ClinicOverlay extends Component {
                             </div>
                             <h3>Ljekari</h3>
                             <hr className='mb-4'/>
-                            <DoctorFilters 
-                                handleChange={this.handleChange} 
+                            <DoctorFilters
+                                handleChange={this.handleChange}
                                 name={this.state.name}
                                 rating={this.state.rating}
-                                date={this.state.date} 
+                                date={this.state.date}
                                 setDate={this.setDate}
                                 handleSelect={this.handleSelect}
                                 appointmentTypes={this.props.appointmentTypes}
                                 appointmentTypeId={this.props.appointmentTypeId}/>
                             <DoctorList
                                 appointmentTypeId={this.props.appointmentTypeId}
-                                date={this.props.date} 
+                                date={this.props.date}
                                 clinicId={this.state.clinic.id}
-                                doctors={this.state.filteredDoctors} 
+                                doctors={this.state.filteredDoctors}
                                 availability={this.props.availability}/>
                         </div>
                         : <Loading/>
                     }
                     <div style={{width: '1rem', height:'1rem', color: 'white'}}>.</div>
-
                 </div>
         );
     }

@@ -47,6 +47,10 @@ Route::group(['middleware' => ['jwt.auth','api-header']], function () {
 
     Route::post('clinics/{clinic}/rate', 'ClinicRatingController@rate');
     Route::get('clinics/{clinic}/rating', 'ClinicRatingController@rating');
+
+    Route::get('clinics/{clinic}/predef', 'PredefAppointmentController@index');
+    Route::post('predef/{predef_appointment}', 'PredefAppointmentController@choose');
+
 });
 
 Route::group(['middleware' => 'api-header'], function () {

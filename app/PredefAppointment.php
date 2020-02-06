@@ -16,7 +16,7 @@ class PredefAppointment extends Model
         return $this->belongsTo('App\Clinic');
     }
 
-    public function doctor() {
+    public function appointment_type() {
         return $this->belongsTo('App\AppointmentType');
     }
 }
