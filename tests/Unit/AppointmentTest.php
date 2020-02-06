@@ -208,7 +208,7 @@ class AppointmentTest extends TestCase
     // =================================================================================================================
 
     private function mockAppointmentMail($isAvailable=true) {
-        $this->mock(AppointmentService::class, function ($mock) use ($isAvailable) {
+        $this->partialMock(AppointmentService::class, function ($mock) use ($isAvailable) {
             $mock->shouldReceive('isAvailable')
                 ->once()
                 ->andReturn($isAvailable);

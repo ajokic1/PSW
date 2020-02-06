@@ -74,27 +74,9 @@ class AppointmentController extends Controller
     public function store(StoreAppointmentRequest $request)
     {
         DB::beginTransaction();
-
-        $appointment = null;
         $validated = $request->validated();
-        $validated['token'] = Str::random(16);
-        if(!$this->appointmentService->isAvailable($validated)){
-            DB::rollBack();
-            return response('Appointment time not available', 400);
-        } else {
-            $appointment = Appointment::create($validated);
-        }
-        if(!is_null($appointment)) {
-            $data = [];
-            Mail::to(Auth::user()->email)
-                ->send(new AppointmentApproved($appointment, $data));
-            DB::commit();
-            return response('Appointment successfully created', 201);
-        }
-        else {
-            DB::rollBack();
-            return response('Appointment creation failed', 400);
-        }
+        $isAvailable = $this->appointmentService->isAvailable($validated);
+        return $this->appointmentService->storeAppointment($validated, $isAvailable);
     }
 
     public function accept(Appointment $appointment, $token) {

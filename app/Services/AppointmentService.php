@@ -4,11 +4,38 @@
 namespace App\Services;
 
 
+use App\Appointment;
 use App\AppointmentType;
 use App\Doctor;
+use App\Mail\AppointmentApproved;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class AppointmentService
 {
+    public function storeAppointment($validated, $isAvailable) {
+        $appointment = null;
+        $validated['token'] = Str::random(16);
+        if(!$isAvailable){
+            DB::rollBack();
+            return response('Appointment time not available', 400);
+        } else {
+            $appointment = Appointment::create($validated);
+        }
+        if(!is_null($appointment)) {
+            $data = [];
+            Mail::to(Auth::user()->email)
+                ->send(new AppointmentApproved($appointment, $data));
+            DB::commit();
+            return response('Appointment successfully created', 201);
+        }
+        else {
+            DB::rollBack();
+            return response('Appointment creation failed', 400);
+        }
+    }
     public function isAvailable($validated) {
         $doctor = Doctor::find($validated['doctor_id']);
         $clinic = $doctor->clinics->find($validated['clinic_id']);

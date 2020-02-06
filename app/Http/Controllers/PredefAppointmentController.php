@@ -2,84 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use App\Clinic;
+use App\Http\Requests\StoreAppointmentRequest;
 use App\PredefAppointment;
+use App\Services\AppointmentService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PredefAppointmentController extends Controller
 {
+    private $appointmentService;
+
+    public function __construct(AppointmentService $appointmentService) {
+        $this->middleware('auth');
+        $this->middleware('admin')->except(['index', 'choose']);
+        $this->appointmentService = $appointmentService;
+    }
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function index()
+    public function index(Clinic $clinic)
     {
-        //
+        return $clinic->predef_appointments;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function choose(PredefAppointment $predef_appointment)
     {
-        //
+        $validated = [
+            'user_id' => Auth::id(),
+            'doctor_id' => $predef_appointment->doctor_id,
+            'clinic_id' => $predef_appointment->clinic_id,
+            'appointment_type_id' => $predef_appointment->appointment_type_id,
+            'date' => $predef_appointment->date,
+            'time' => $predef_appointment->time,
+        ];
+        DB::beginTransaction();
+        $isAvailable = $this->appointmentService->isAvailable($validated);
+        $response = $this->appointmentService->storeAppointment($validated, $isAvailable);
+        if($response->getStatusCode() == 201) {
+            try {
+                $predef_appointment->delete();
+            } catch (\Exception $e) {
+                return response('Couldn\'t delete predef.', 500);
+            }
+        }
+        return $response;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\PredefAppointment  $predefAppointment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(PredefAppointment $predefAppointment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\PredefAppointment  $predefAppointment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(PredefAppointment $predefAppointment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\PredefAppointment  $predefAppointment
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, PredefAppointment $predefAppointment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\PredefAppointment  $predefAppointment
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(PredefAppointment $predefAppointment)
-    {
-        //
-    }
 }
