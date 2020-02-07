@@ -88346,6 +88346,508 @@ var index = Object(_chunk_b36baf1a_browser_esm_js__WEBPACK_IMPORTED_MODULE_23__[
 
 /***/ }),
 
+/***/ "./node_modules/react-star-ratings/build/index.js":
+/*!********************************************************!*\
+  !*** ./node_modules/react-star-ratings/build/index.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _starRatings = __webpack_require__(/*! ./star-ratings */ "./node_modules/react-star-ratings/build/star-ratings.js");
+
+var _starRatings2 = _interopRequireDefault(_starRatings);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// polyfill for ie
+Number.isInteger = Number.isInteger || function (value) {
+  return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
+};
+
+exports.default = _starRatings2.default;
+
+/***/ }),
+
+/***/ "./node_modules/react-star-ratings/build/star-ratings.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/react-star-ratings/build/star-ratings.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _star = __webpack_require__(/*! ./star */ "./node_modules/react-star-ratings/build/star.js");
+
+var _star2 = _interopRequireDefault(_star);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var StarRatings = function (_React$Component) {
+  _inherits(StarRatings, _React$Component);
+
+  function StarRatings() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, StarRatings);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = StarRatings.__proto__ || Object.getPrototypeOf(StarRatings)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+      highestStarHovered: -Infinity
+    }, _this.fillId = 'starGrad' + Math.random().toFixed(15).slice(2), _this.hoverOverStar = function (starRating) {
+      return function () {
+        _this.setState({
+          highestStarHovered: starRating
+        });
+      };
+    }, _this.unHoverOverStar = function () {
+      _this.setState({
+        highestStarHovered: -Infinity
+      });
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(StarRatings, [{
+    key: 'stopColorStyle',
+    value: function stopColorStyle(color) {
+      var stopColorStyle = {
+        stopColor: color,
+        stopOpacity: '1'
+      };
+      return this.props.ignoreInlineStyles ? {} : stopColorStyle;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          starRatedColor = _props.starRatedColor,
+          starEmptyColor = _props.starEmptyColor;
+
+
+      return _react2.default.createElement(
+        'div',
+        {
+          className: 'star-ratings',
+          title: this.titleText,
+          style: this.starRatingsStyle
+        },
+        _react2.default.createElement(
+          'svg',
+          {
+            className: 'star-grad',
+            style: this.starGradientStyle
+          },
+          _react2.default.createElement(
+            'defs',
+            null,
+            _react2.default.createElement(
+              'linearGradient',
+              { id: this.fillId, x1: '0%', y1: '0%', x2: '100%', y2: '0%' },
+              _react2.default.createElement('stop', { offset: '0%', className: 'stop-color-first', style: this.stopColorStyle(starRatedColor) }),
+              _react2.default.createElement('stop', { offset: this.offsetValue, className: 'stop-color-first', style: this.stopColorStyle(starRatedColor) }),
+              _react2.default.createElement('stop', { offset: this.offsetValue, className: 'stop-color-final', style: this.stopColorStyle(starEmptyColor) }),
+              _react2.default.createElement('stop', { offset: '100%', className: 'stop-color-final', style: this.stopColorStyle(starEmptyColor) })
+            )
+          )
+        ),
+        this.renderStars
+      );
+    }
+  }, {
+    key: 'starRatingsStyle',
+    get: function get() {
+      var starRatingsStyle = {
+        position: 'relative',
+        boxSizing: 'border-box',
+        display: 'inline-block'
+      };
+      return this.props.ignoreInlineStyles ? {} : starRatingsStyle;
+    }
+  }, {
+    key: 'starGradientStyle',
+    get: function get() {
+      var starGradientStyle = {
+        position: 'absolute',
+        zIndex: '0',
+        width: '0',
+        height: '0',
+        visibility: 'hidden'
+      };
+      return this.props.ignoreInlineStyles ? {} : starGradientStyle;
+    }
+  }, {
+    key: 'titleText',
+    get: function get() {
+      var _props2 = this.props,
+          typeOfWidget = _props2.typeOfWidget,
+          selectedRating = _props2.rating;
+
+      var hoveredRating = this.state.highestStarHovered;
+      var currentRating = hoveredRating > 0 ? hoveredRating : selectedRating;
+      // fix it at 2 decimal places and remove trailing 0s
+      var formattedRating = parseFloat(currentRating.toFixed(2)).toString();
+      if (Number.isInteger(currentRating)) {
+        formattedRating = String(currentRating);
+      }
+      var starText = typeOfWidget + 's';
+      if (formattedRating === '1') {
+        starText = typeOfWidget;
+      }
+      return formattedRating + ' ' + starText;
+    }
+  }, {
+    key: 'offsetValue',
+    get: function get() {
+      var rating = this.props.rating;
+      var ratingIsInteger = Number.isInteger(rating);
+      var offsetValue = '0%';
+      if (!ratingIsInteger) {
+        var firstTwoDecimals = rating.toFixed(2).split('.')[1].slice(0, 2);
+        offsetValue = firstTwoDecimals + '%';
+      }
+      return offsetValue;
+    }
+  }, {
+    key: 'renderStars',
+    get: function get() {
+      var _this2 = this;
+
+      var _props3 = this.props,
+          changeRating = _props3.changeRating,
+          selectedRating = _props3.rating,
+          numberOfStars = _props3.numberOfStars,
+          starDimension = _props3.starDimension,
+          starSpacing = _props3.starSpacing,
+          starRatedColor = _props3.starRatedColor,
+          starEmptyColor = _props3.starEmptyColor,
+          starHoverColor = _props3.starHoverColor,
+          gradientPathName = _props3.gradientPathName,
+          ignoreInlineStyles = _props3.ignoreInlineStyles,
+          svgIconPath = _props3.svgIconPath,
+          svgIconViewBox = _props3.svgIconViewBox,
+          name = _props3.name;
+      var highestStarHovered = this.state.highestStarHovered;
+
+
+      var numberOfStarsArray = Array.apply(null, Array(numberOfStars));
+
+      return numberOfStarsArray.map(function (_, index) {
+        var starRating = index + 1;
+        var isStarred = starRating <= selectedRating;
+
+        // hovered only matters when changeRating is true
+        var hoverMode = highestStarHovered > 0;
+        var isHovered = starRating <= highestStarHovered;
+        var isCurrentHoveredStar = starRating === highestStarHovered;
+
+        // only matters when changeRating is false
+        // given star 5 and rating 4.2:  5 > 4.2 && 4 < 4.2;
+        var isPartiallyFullStar = starRating > selectedRating && starRating - 1 < selectedRating;
+
+        var isFirstStar = starRating === 1;
+        var isLastStar = starRating === numberOfStars;
+
+        return _react2.default.createElement(_star2.default, {
+          key: starRating,
+          fillId: _this2.fillId,
+          changeRating: changeRating ? function () {
+            return changeRating(starRating, name);
+          } : null,
+          hoverOverStar: changeRating ? _this2.hoverOverStar(starRating) : null,
+          unHoverOverStar: changeRating ? _this2.unHoverOverStar : null,
+          isStarred: isStarred,
+          isPartiallyFullStar: isPartiallyFullStar,
+          isHovered: isHovered,
+          hoverMode: hoverMode,
+          isCurrentHoveredStar: isCurrentHoveredStar,
+          isFirstStar: isFirstStar,
+          isLastStar: isLastStar,
+          starDimension: starDimension,
+          starSpacing: starSpacing,
+          starHoverColor: starHoverColor,
+          starRatedColor: starRatedColor,
+          starEmptyColor: starEmptyColor,
+          gradientPathName: gradientPathName,
+          ignoreInlineStyles: ignoreInlineStyles,
+          svgIconPath: svgIconPath,
+          svgIconViewBox: svgIconViewBox
+        });
+      });
+    }
+  }]);
+
+  return StarRatings;
+}(_react2.default.Component);
+
+StarRatings.propTypes = {
+  rating: _propTypes2.default.number.isRequired,
+  numberOfStars: _propTypes2.default.number.isRequired,
+  changeRating: _propTypes2.default.func,
+  starHoverColor: _propTypes2.default.string.isRequired,
+  starRatedColor: _propTypes2.default.string.isRequired,
+  starEmptyColor: _propTypes2.default.string.isRequired,
+  starDimension: _propTypes2.default.string.isRequired,
+  starSpacing: _propTypes2.default.string.isRequired,
+  gradientPathName: _propTypes2.default.string.isRequired,
+  ignoreInlineStyles: _propTypes2.default.bool.isRequired,
+  svgIconPath: _propTypes2.default.string.isRequired,
+  svgIconViewBox: _propTypes2.default.string.isRequired,
+  name: _propTypes2.default.string
+};
+
+StarRatings.defaultProps = {
+  rating: 0,
+  typeOfWidget: 'Star',
+  numberOfStars: 5,
+  changeRating: null,
+  starHoverColor: 'rgb(230, 67, 47)',
+  starRatedColor: 'rgb(109, 122, 130)',
+  starEmptyColor: 'rgb(203, 211, 227)',
+  starDimension: '50px',
+  starSpacing: '7px',
+  gradientPathName: '',
+  ignoreInlineStyles: false,
+  svgIconPath: 'm25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z',
+  svgIconViewBox: '0 0 51 48'
+};
+
+exports.default = StarRatings;
+
+/***/ }),
+
+/***/ "./node_modules/react-star-ratings/build/star.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/react-star-ratings/build/star.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _classnames = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Star = function (_React$Component) {
+  _inherits(Star, _React$Component);
+
+  function Star() {
+    _classCallCheck(this, Star);
+
+    return _possibleConstructorReturn(this, (Star.__proto__ || Object.getPrototypeOf(Star)).apply(this, arguments));
+  }
+
+  _createClass(Star, [{
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          changeRating = _props.changeRating,
+          hoverOverStar = _props.hoverOverStar,
+          unHoverOverStar = _props.unHoverOverStar,
+          svgIconViewBox = _props.svgIconViewBox,
+          svgIconPath = _props.svgIconPath;
+
+      return _react2.default.createElement(
+        'div',
+        {
+          className: 'star-container',
+          style: this.starContainerStyle,
+          onMouseEnter: hoverOverStar,
+          onMouseLeave: unHoverOverStar,
+          onClick: changeRating
+        },
+        _react2.default.createElement(
+          'svg',
+          {
+            viewBox: svgIconViewBox,
+            className: this.starClasses,
+            style: this.starSvgStyle
+          },
+          _react2.default.createElement('path', {
+            className: 'star',
+            style: this.pathStyle,
+            d: svgIconPath
+          })
+        )
+      );
+    }
+  }, {
+    key: 'starContainerStyle',
+    get: function get() {
+      var _props2 = this.props,
+          changeRating = _props2.changeRating,
+          starSpacing = _props2.starSpacing,
+          isFirstStar = _props2.isFirstStar,
+          isLastStar = _props2.isLastStar,
+          ignoreInlineStyles = _props2.ignoreInlineStyles;
+
+
+      var starContainerStyle = {
+        position: 'relative',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        paddingLeft: isFirstStar ? undefined : starSpacing,
+        paddingRight: isLastStar ? undefined : starSpacing,
+        cursor: changeRating ? 'pointer' : undefined
+      };
+      return ignoreInlineStyles ? {} : starContainerStyle;
+    }
+  }, {
+    key: 'starSvgStyle',
+    get: function get() {
+      var _props3 = this.props,
+          ignoreInlineStyles = _props3.ignoreInlineStyles,
+          isCurrentHoveredStar = _props3.isCurrentHoveredStar,
+          starDimension = _props3.starDimension;
+
+      var starSvgStyle = {
+        width: starDimension,
+        height: starDimension,
+        transition: 'transform .2s ease-in-out',
+        transform: isCurrentHoveredStar ? 'scale(1.1)' : undefined
+      };
+
+      return ignoreInlineStyles ? {} : starSvgStyle;
+    }
+  }, {
+    key: 'pathStyle',
+    get: function get() {
+      var _props4 = this.props,
+          isStarred = _props4.isStarred,
+          isPartiallyFullStar = _props4.isPartiallyFullStar,
+          isHovered = _props4.isHovered,
+          hoverMode = _props4.hoverMode,
+          starEmptyColor = _props4.starEmptyColor,
+          starRatedColor = _props4.starRatedColor,
+          starHoverColor = _props4.starHoverColor,
+          gradientPathName = _props4.gradientPathName,
+          fillId = _props4.fillId,
+          ignoreInlineStyles = _props4.ignoreInlineStyles;
+
+
+      var fill = void 0;
+      if (hoverMode) {
+        if (isHovered) fill = starHoverColor;else fill = starEmptyColor;
+      } else {
+        if (isPartiallyFullStar) fill = 'url(\'' + gradientPathName + '#' + fillId + '\')';else if (isStarred) fill = starRatedColor;else fill = starEmptyColor;
+      }
+
+      var pathStyle = {
+        fill: fill,
+        transition: 'fill .2s ease-in-out'
+      };
+
+      return ignoreInlineStyles ? {} : pathStyle;
+    }
+  }, {
+    key: 'starClasses',
+    get: function get() {
+      var _props5 = this.props,
+          isSelected = _props5.isSelected,
+          isPartiallyFullStar = _props5.isPartiallyFullStar,
+          isHovered = _props5.isHovered,
+          isCurrentHoveredStar = _props5.isCurrentHoveredStar,
+          ignoreInlineStyles = _props5.ignoreInlineStyles;
+
+
+      var starClasses = (0, _classnames2.default)({
+        'widget-svg': true,
+        'widget-selected': isSelected,
+        'multi-widget-selected': isPartiallyFullStar,
+        'hovered': isHovered,
+        'current-hovered': isCurrentHoveredStar
+      });
+
+      return ignoreInlineStyles ? {} : starClasses;
+    }
+  }]);
+
+  return Star;
+}(_react2.default.Component);
+
+Star.propTypes = {
+  fillId: _propTypes2.default.string.isRequired,
+  changeRating: _propTypes2.default.func,
+  hoverOverStar: _propTypes2.default.func,
+  unHoverOverStar: _propTypes2.default.func,
+  isStarred: _propTypes2.default.bool.isRequired,
+  isPartiallyFullStar: _propTypes2.default.bool.isRequired,
+  isHovered: _propTypes2.default.bool.isRequired,
+  hoverMode: _propTypes2.default.bool.isRequired,
+  isCurrentHoveredStar: _propTypes2.default.bool.isRequired,
+  isFirstStar: _propTypes2.default.bool.isRequired,
+  isLastStar: _propTypes2.default.bool.isRequired,
+  starDimension: _propTypes2.default.string.isRequired,
+  starSpacing: _propTypes2.default.string.isRequired,
+  starHoverColor: _propTypes2.default.string.isRequired,
+  starRatedColor: _propTypes2.default.string.isRequired,
+  starEmptyColor: _propTypes2.default.string.isRequired,
+  gradientPathName: _propTypes2.default.string.isRequired,
+  ignoreInlineStyles: _propTypes2.default.bool.isRequired,
+  svgIconPath: _propTypes2.default.string.isRequired,
+  svgIconViewBox: _propTypes2.default.string.isRequired
+};
+
+exports.default = Star;
+
+/***/ }),
+
 /***/ "./node_modules/react/cjs/react.development.js":
 /*!*****************************************************!*\
   !*** ./node_modules/react/cjs/react.development.js ***!
@@ -93693,6 +94195,155 @@ function (_Component) {
 
 /***/ }),
 
+/***/ "./resources/js/components/appointments/PredefinedAppointmentRow.js":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/appointments/PredefinedAppointmentRow.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var PredefinedAppointmentRow =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(PredefinedAppointmentRow, _Component);
+
+  function PredefinedAppointmentRow() {
+    _classCallCheck(this, PredefinedAppointmentRow);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(PredefinedAppointmentRow).apply(this, arguments));
+  }
+
+  _createClass(PredefinedAppointmentRow, [{
+    key: "render",
+    value: function render() {
+      var _this = this;
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+        className: "dark_hover",
+        onClick: function onClick() {
+          return _this.props.handleClick(_this.props.predef.id);
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, this.props.predef.date), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, this.props.predef.time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, this.props.predef.doctor.first_name + this.props.predef.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, this.props.predef.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, this.props.predef.appointment_type.name));
+    }
+  }]);
+
+  return PredefinedAppointmentRow;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (PredefinedAppointmentRow);
+
+/***/ }),
+
+/***/ "./resources/js/components/appointments/PredefinedAppointments.js":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/appointments/PredefinedAppointments.js ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _PredefinedAppointmentRow__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PredefinedAppointmentRow */ "./resources/js/components/appointments/PredefinedAppointmentRow.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+var PredefinedAppointments =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(PredefinedAppointments, _Component);
+
+  function PredefinedAppointments() {
+    _classCallCheck(this, PredefinedAppointments);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(PredefinedAppointments).apply(this, arguments));
+  }
+
+  _createClass(PredefinedAppointments, [{
+    key: "render",
+    value: function render() {
+      var _this = this;
+
+      var predefs = null;
+
+      if (this.props.predefs) {
+        predefs = this.props.predefs.map(function (predef) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_PredefinedAppointmentRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+            handleClick: _this.props.handleClick,
+            key: predef.id,
+            predef: predef
+          });
+        });
+      }
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+        className: "table"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", {
+        className: "thead-dark"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Datum"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Vrijeme"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Ljekar"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Klinika"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+        scope: "col"
+      }, "Tip pregleda"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, predefs)));
+    }
+  }]);
+
+  return PredefinedAppointments;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (PredefinedAppointments);
+
+/***/ }),
+
 /***/ "./resources/js/components/appointments/SubmitAppointment.js":
 /*!*******************************************************************!*\
   !*** ./resources/js/components/appointments/SubmitAppointment.js ***!
@@ -94551,6 +95202,8 @@ function (_Component) {
         className: "card-title"
       }, this.props.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-text"
+      }, "Ocjena: ", this.props.clinic.rating), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card-text"
       }, this.props.clinic.address), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-text"
       }, this.props.clinic.city)))));
@@ -94770,6 +95423,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _doctors_DoctorList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../doctors/DoctorList */ "./resources/js/components/doctors/DoctorList.js");
 /* harmony import */ var _partials_Loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partials/Loading */ "./resources/js/components/partials/Loading.js");
 /* harmony import */ var _doctors_DoctorFilters__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../doctors/DoctorFilters */ "./resources/js/components/doctors/DoctorFilters.js");
+/* harmony import */ var react_star_ratings__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-star-ratings */ "./node_modules/react-star-ratings/build/index.js");
+/* harmony import */ var react_star_ratings__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_star_ratings__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _appointments_PredefinedAppointments__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../appointments/PredefinedAppointments */ "./resources/js/components/appointments/PredefinedAppointments.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -94795,6 +95451,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
+
 var ClinicOverlay =
 /*#__PURE__*/
 function (_Component) {
@@ -94811,11 +95469,15 @@ function (_Component) {
       filteredDoctors: [],
       name: '',
       rating: '',
-      needsFiltering: false
+      needsFiltering: false,
+      currentRating: 0,
+      predefs: []
     };
     _this.filterDoctors = _this.filterDoctors.bind(_assertThisInitialized(_this));
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleSelect = _this.handleSelect.bind(_assertThisInitialized(_this));
+    _this.changeRating = _this.changeRating.bind(_assertThisInitialized(_this));
+    _this.handlePredefClick = _this.handlePredefClick.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -94828,6 +95490,13 @@ function (_Component) {
         _this2.setState({
           clinic: json.data,
           filteredDoctors: json.data.doctors
+        });
+      });
+      axios.get('/api/clinics/' + this.props.match.params.clinicId + '/predef').then(function (json) {
+        console.log(json.data);
+
+        _this2.setState({
+          predefs: json.data
         });
       });
     }
@@ -94865,6 +95534,32 @@ function (_Component) {
       }
     }
   }, {
+    key: "changeRating",
+    value: function changeRating(newRating, name) {
+      var _this4 = this;
+
+      this.setState({
+        currentRating: newRating
+      });
+      axios.post('/api/clinics/' + this.state.clinic.id + '/rate', newRating).then(function (json) {
+        var clinic = _this4.state.clinic;
+        clinic.rating = json.data;
+
+        _this4.setState({
+          clinic: clinic
+        });
+      });
+    }
+  }, {
+    key: "handlePredefClick",
+    value: function handlePredefClick(id) {
+      var _this5 = this;
+
+      axios.post('/api/predefs/' + id).then(function (json) {
+        _this5.props.history.push('/appointments');
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       if (this.state.needsFiltering) this.filterDoctors();
@@ -94878,10 +95573,24 @@ function (_Component) {
         className: "col-md-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         className: "img-fluid",
-        src: '/images/' + this.state.clinic.photo
+        src: '/images/' + this.state.clinic.photo,
+        alt: "Clinic photo"
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-7"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.address), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.city))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Ljekari"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Ocjena: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_star_ratings__WEBPACK_IMPORTED_MODULE_4___default.a, {
+        starDimension: "24px",
+        starSpacing: "2px",
+        starRatedColor: "red",
+        rating: this.state.clinic.rating
+      }), this.state.clinic.rating), this.state.clinic.canRate && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, " Ocijeni:", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_star_ratings__WEBPACK_IMPORTED_MODULE_4___default.a, {
+        rating: this.state.currentRating,
+        starRatedColor: "red",
+        changeRating: "this.changeRating",
+        numberOfStars: 5,
+        starDimension: "24px",
+        starSpacing: "2px",
+        name: "clinicRating"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.address), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.clinic.city))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Ljekari"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
         className: "mb-4"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_doctors_DoctorFilters__WEBPACK_IMPORTED_MODULE_3__["default"], {
         handleChange: this.handleChange,
@@ -94898,7 +95607,12 @@ function (_Component) {
         clinicId: this.state.clinic.id,
         doctors: this.state.filteredDoctors,
         availability: this.props.availability
-      })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Loading__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Predefinisani pregledi"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", {
+        className: "mb-4"
+      }), this.state.predefs.length === 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_appointments_PredefinedAppointments__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        predefs: this.state.predefs,
+        handleClick: this.handlePredefClick
+      }) : 'Nema predefinisanih pregleda.') : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_Loading__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         style: {
           width: '1rem',
           height: '1rem',
@@ -95230,6 +95944,8 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
         className: "card-title"
       }, this.props.doctor.first_name + ' ' + this.props.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card-text"
+      }, "Ocjena: ", this.props.doctor.rating), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-text"
       }, "Slobodni termini:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-text"

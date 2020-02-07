@@ -6,7 +6,7 @@ body, html, #root {
 }
 
 .btn:focus,.btn:active:focus,.btn.active:focus,
-.btn.focus,.btn:active.focus,.btn.active.focus, {
+.btn.focus,.btn:active.focus,.btn.active.focus {
     outline: none;
     box-shadow: none;
 }
@@ -79,7 +79,7 @@ body, html, #root {
   border-radius: 3px;
   background-color: darkgray;
   margin: 0.2rem;
-  padding: 0.4rem; 
+  padding: 0.4rem;
 }
 .yeet_box:hover {
   cursor: pointer;

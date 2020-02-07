@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import DoctorList from '../doctors/DoctorList';
 import Loading from '../partials/Loading';
 import DoctorFilters from '../doctors/DoctorFilters';
-import StarRatings from './react-star-ratings';
+import StarRatings from 'react-star-ratings';
+import PredefinedAppointments from "../appointments/PredefinedAppointments";
 
 export default class ClinicOverlay extends Component {
     constructor(props){
@@ -14,17 +15,24 @@ export default class ClinicOverlay extends Component {
             rating: '',
             needsFiltering: false,
             currentRating: 0,
+            predefs: [],
         };
 
         this.filterDoctors = this.filterDoctors.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
         this.changeRating = this.changeRating.bind(this);
+        this.handlePredefClick = this.handlePredefClick.bind(this);
     }
     componentDidMount() {
         axios.get('/api/clinics/'+this.props.match.params.clinicId)
             .then(json => {
                 this.setState({clinic: json.data, filteredDoctors: json.data.doctors});
+            });
+        axios.get('/api/clinics/' + this.props.match.params.clinicId + '/predef')
+            .then(json => {
+                console.log(json.data);
+                this.setState({predefs: json.data});
             });
     }
     handleChange(event) {
@@ -52,12 +60,18 @@ export default class ClinicOverlay extends Component {
     }
     changeRating( newRating, name ) {
       this.setState({ currentRating: newRating });
-      axios.post('/clinics/' + this.state.clinic.id + '/rate', newRating)
+      axios.post('/api/clinics/' + this.state.clinic.id + '/rate', newRating)
         .then(json =>{
             let clinic = this.state.clinic;
             clinic.rating = json.data;
             this.setState({clinic});
         });
+    }
+    handlePredefClick(id) {
+        axios.post('/api/predefs/' + id)
+            .then(json => {
+                this.props.history.push('/appointments');
+            });
     }
     render() {
         if(this.state.needsFiltering) this.filterDoctors();
@@ -72,7 +86,7 @@ export default class ClinicOverlay extends Component {
                                     <img className='img-fluid' src={'/images/'+this.state.clinic.photo} alt='Clinic photo'/>
                                 </div>
                                 <div className='col-md-7'>
-                                    <p>Ocjena: <StarRatings starRatedColor='red' rating={this.state.clinic.rating}/>
+                                    <p>Ocjena: <StarRatings starDimension='24px' starSpacing='2px' starRatedColor='red' rating={this.state.clinic.rating}/>
                                         {this.state.clinic.rating}</p>
                                     { this.state.clinic.canRate &&
                                         <p> Ocijeni:
@@ -81,6 +95,8 @@ export default class ClinicOverlay extends Component {
                                                 starRatedColor='red'
                                                 changeRating='this.changeRating'
                                                 numberOfStars={5}
+                                                starDimension='24px'
+                                                starSpacing='2px'
                                                 name='clinicRating'/>
                                         </p>
                                     }
@@ -106,6 +122,15 @@ export default class ClinicOverlay extends Component {
                                 clinicId={this.state.clinic.id}
                                 doctors={this.state.filteredDoctors}
                                 availability={this.props.availability}/>
+                            <h3>Predefinisani pregledi</h3>
+                            <hr className='mb-4'/>
+                            {this.state.predefs.length === 0
+                                ? (<PredefinedAppointments
+                                    predefs={this.state.predefs}
+                                    handleClick={this.handlePredefClick}/>)
+                                : 'Nema predefinisanih pregleda.'
+                            }
+
                         </div>
                         : <Loading/>
                     }
