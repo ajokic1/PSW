@@ -6,6 +6,7 @@ use App\Clinic;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\PredefAppointment;
 use App\Services\AppointmentService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -23,11 +24,11 @@ class PredefAppointmentController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return Collection
      */
     public function index(Clinic $clinic)
     {
-        return $clinic->predef_appointments;
+        return $clinic->predef_appointments()->with(['doctor', 'clinic', 'appointment_type'])->get();
     }
 
     public function choose(PredefAppointment $predef_appointment)
