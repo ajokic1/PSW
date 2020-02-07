@@ -19,16 +19,18 @@ class DoctorRatingController extends Controller
     public function rate(Doctor $doctor, Request $request)
     {
         if(is_int($request->rating) and $request->rating>0 and $request->rating<6)
-        { 
+        {
             $user = Auth::user();
 
-            $user->loadCount(['appointments' => function ($query) use ($clinic) {
+            $user->loadCount(['appointments' => function ($query) use ($doctor) {
                 $query->where('doctor_id', $doctor->id);
             }]);
 
             if($user->appointments_count>0) {
-                $doctor_rating = $user->doctor_ratings()
-                    ->where('doctor_id', $doctor->id)->firstOrNew();
+                $doctor_rating = DoctorRating::firstOrNew([
+                    'user_id' => Auth::id(),
+                    'doctor_id' => $doctor->id
+                ]);
                 $doctor_rating->user_id = $user->id;
                 $doctor_rating->doctor_id = $doctor->id;
                 $doctor_rating->rating = $request->rating;
@@ -47,7 +49,7 @@ class DoctorRatingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function rating(Doctor $doctor)
-    {  
+    {
         return $doctor->rating;
     }
 }
