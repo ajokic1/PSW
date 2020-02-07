@@ -139,7 +139,7 @@ class UserController extends Controller
     }
 
     public function update(Request $request) {
-        $user = Auth::user();
+        $user = User::find(Auth::id());
         $validated = $request->validate([
             'password'=>'nullable',
             'first_name'=>'required',
