@@ -19,7 +19,7 @@ class ClinicRatingController extends Controller
     public function rate(Clinic $clinic, Request $request)
     {
         if(is_int($request->rating) and $request->rating>0 and $request->rating<6)
-        { 
+        {
             $user = Auth::user();
 
             $user->loadCount(['appointments' => function ($query) use ($clinic) {
@@ -27,14 +27,16 @@ class ClinicRatingController extends Controller
             }]);
 
             if($user->appointments_count>0) {
-                $clinic_rating = $user->clinic_ratings()
-                    ->where('clinic_id', $clinic->id)->firstOrNew();
+                $clinic_rating = ClinicRating::firstOrNew([
+                    'user_id' => Auth::id(),
+                    'clinic_id' => $clinic->id
+                ]);
                 $clinic_rating->user_id = $user->id;
                 $clinic_rating->clinic_id = $clinic->id;
                 $clinic_rating->rating = $request->rating;
                 $clinic_rating->comment = $request->comment;
                 $clinic_rating->save();
-                return $clinic->rating;
+                return response($clinic->rating, 200);
 
             } else return response('User can only rate visited clinics', 403);
         }
@@ -48,7 +50,7 @@ class ClinicRatingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function rating(Clinic $clinic)
-    {  
+    {
         return $clinic->rating;
     }
 }
