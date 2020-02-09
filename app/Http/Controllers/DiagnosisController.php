@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Diagnosis;
+use Cassandra\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class DiagnosisController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Get a list of all the logged in patient's diagnoses.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -23,68 +26,13 @@ class DiagnosisController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Get the specified diagnosis.
      *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Diagnosis  $diagnosis
-     * @return \Illuminate\Http\Response
+     * @param \App\Diagnosis $diagnosis
+     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function show(Diagnosis $diagnosis)
     {
         return $diagnosis->with(['condition', 'doctor'])->get();
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Diagnosis  $diagnosis
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Diagnosis $diagnosis)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Diagnosis  $diagnosis
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Diagnosis $diagnosis)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Diagnosis  $diagnosis
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Diagnosis $diagnosis)
-    {
-        //
     }
 }

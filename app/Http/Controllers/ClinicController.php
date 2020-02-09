@@ -14,7 +14,7 @@ class ClinicController extends Controller
     }
 
     /**
-     * Display a listing of all clinics.
+     * Get a list of all clinics.
      *
      * @return \Illuminate\Http\Response $clinics
      */
@@ -27,7 +27,7 @@ class ClinicController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new clinic.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -47,7 +47,7 @@ class ClinicController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get the specified clinic.
      *
      * @param  \App\Clinic  $clinic
      * @return \App\Clinic
@@ -68,7 +68,7 @@ class ClinicController extends Controller
         return $clinic;
     }
     /**
-     * Update the specified resource in storage.
+     * Update the specified clinic.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Clinic  $clinic
@@ -89,10 +89,11 @@ class ClinicController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the specified clinic.
      *
-     * @param  \App\Clinic  $clinic
+     * @param \App\Clinic $clinic
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Clinic $clinic)
     {

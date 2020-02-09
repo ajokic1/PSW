@@ -82,7 +82,7 @@ export default class App extends Component {
                         <Home/>
                     </PrivateRoute>
                     <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/appointment/:doctorId/:clinicId/:appTypeId/:date">
-                        <SubmitAppointment />
+                        <SubmitAppointment user={this.state.user}/>
                     </PrivateRoute>
                     <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/appointments">
                         <Appointments user={this.state.user}/>

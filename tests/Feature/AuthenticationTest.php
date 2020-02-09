@@ -19,7 +19,6 @@ class AuthenticationTest extends TestCase
     public function testRegistration() {
         $user = factory(User::class)->make(['role' => 'patient', 'email' => 'test@test.test']);
         $response = $this->json('POST', '/api/register', $user->toArray());
-        var_dump($response->getOriginalContent());
         $response
             ->assertStatus(201)
             ->assertJson([

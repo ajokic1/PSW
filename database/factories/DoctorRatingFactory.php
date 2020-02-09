@@ -8,6 +8,6 @@ use Faker\Generator as Faker;
 $factory->define(DoctorRating::class, function (Faker $faker) {
     return [
         'rating' => $faker->numberBetween(1,5),
-        'comment' => $faker->words(4, true),
+        'comment' => $faker->sentence(6, true),
     ];
 });

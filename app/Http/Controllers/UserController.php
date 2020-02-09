@@ -8,6 +8,14 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
+
+    /**
+     * Get a Json Web Token
+     *
+     * @param $email
+     * @param $password
+     * @return \Illuminate\Http\JsonResponse|null
+     */
     private function getToken($email, $password)
     {
         $token = null;
@@ -28,6 +36,13 @@ class UserController extends Controller
         }
         return $token;
     }
+
+    /**
+     * Authenticate an user.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
         $user = \App\User::where('email', $request->email)->get()->first();
@@ -46,6 +61,13 @@ class UserController extends Controller
 
         return response()->json($response, 201);
     }
+
+    /**
+     * Register a new user
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -138,6 +160,13 @@ class UserController extends Controller
         ]);
     }
 
+
+    /**
+     * Update the user's info
+     *
+     * @param Request $request
+     * @return array
+     */
     public function update(Request $request) {
         $user = User::find(Auth::id());
         $validated = $request->validate([

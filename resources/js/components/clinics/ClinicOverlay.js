@@ -21,7 +21,7 @@ export default class ClinicOverlay extends Component {
         this.filterDoctors = this.filterDoctors.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
-        this.changeRating = this.changeRating.bind(this);
+        this.handleChangeRating = this.handleChangeRating.bind(this);
         this.handlePredefClick = this.handlePredefClick.bind(this);
     }
     componentDidMount() {
@@ -58,9 +58,10 @@ export default class ClinicOverlay extends Component {
         this.setState({filteredDoctors: filteredDoctors, needsFiltering: false});
         }
     }
-    changeRating( newRating, name ) {
+    handleChangeRating( newRating, name ) {
       this.setState({ currentRating: newRating });
-      axios.post('/api/clinics/' + this.state.clinic.id + '/rate', newRating)
+      console.log(newRating);
+      axios.post('/api/clinics/' + this.state.clinic.id + '/rate', {rating: newRating})
         .then(json =>{
             let clinic = this.state.clinic;
             clinic.rating = json.data;
@@ -93,7 +94,7 @@ export default class ClinicOverlay extends Component {
                                             <StarRatings
                                                 rating={this.state.currentRating}
                                                 starRatedColor='red'
-                                                changeRating='this.changeRating'
+                                                changeRating={this.handleChangeRating}
                                                 numberOfStars={5}
                                                 starDimension='24px'
                                                 starSpacing='2px'

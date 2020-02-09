@@ -11,19 +11,9 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
-            'email'=>'test@test.test',
-            'password'=>\Hash::make(12345678),            
-            'first_name'=>'TestSeed',
-            'last_name'=>'User',
-            'address'=>'Test address',
-            'city'=>'Test city',
-            'country'=>'Test country',
-            'phone_no'=>'123123123',
-            'insurance_no'=>'123123123',
-            'auth_token'=>'',
-        ];
-        $user = new \App\User($data);
-        $user->save();
+        factory(\App\User::class)->create(['role' => 'patient', 'email' => 'aj.jokic@gmail.com']);
+        factory(\App\User::class)->create(['role' => 'admin', 'email' => 'aj.jokic+admin@gmail.com']);
+        factory(\App\User::class, 15)->create(['role' => 'patient']);
+
     }
 }
