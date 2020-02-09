@@ -14,6 +14,7 @@ use App\User;
 use App\AppointmentType;
 use App\Availability;
 use App\Mail\AppointmentApproved;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -54,15 +55,7 @@ class AppointmentController extends Controller
             ->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Create a new appointment.
@@ -79,6 +72,13 @@ class AppointmentController extends Controller
         return $this->appointmentService->storeAppointment($validated, $isAvailable);
     }
 
+    /**
+     * Accept an appointment.
+     *
+     * @param Appointment $appointment
+     * @param $token
+     * @return ResponseFactory|Response
+     */
     public function accept(Appointment $appointment, $token) {
         if($appointment->token == $token) {
             $appointment->accepted = true;
@@ -88,6 +88,13 @@ class AppointmentController extends Controller
         } else return response('Invalid token', 400);
     }
 
+    /**
+     * Decline an appointment.
+     *
+     * @param Appointment $appointment
+     * @param $token
+     * @return ResponseFactory|Response
+     */
     public function decline(Appointment $appointment, $token) {
         if($appointment->token == $token){
             $appointment->accepted = false;
@@ -98,44 +105,11 @@ class AppointmentController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Cancel an appointment.
      *
-     * @param  \App\Appointment  $appointment
+     * @param \App\Appointment $appointment
      * @return Response
-     */
-    public function show(Appointment $appointment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Appointment  $appointment
-     * @return Response
-     */
-    public function edit(Appointment $appointment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Appointment  $appointment
-     * @return Response
-     */
-    public function update(Request $request, Appointment $appointment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Appointment  $appointment
-     * @return Response
+     * @throws Exception
      */
     public function destroy(Appointment $appointment)
     {

@@ -13,15 +13,6 @@ class ApiVerificationController extends Controller
     use VerifiesEmails;
 
     /**
-    * Show the email verification notice.
-    *
-    */
-    public function show()
-    {
-        //
-    }
-
-    /**
     * Mark the authenticated user’s email address as verified.
     *
     * @param \Illuminate\Http\Request $request
