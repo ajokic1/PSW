@@ -13,6 +13,7 @@ class SubmitAppointment extends Component {
             availability: [],
             loaded: false,
             isSubmitted: false,
+            submitting: false,
         }
         this.submitAppointment = this.submitAppointment.bind(this);
     }
@@ -36,10 +37,12 @@ class SubmitAppointment extends Component {
     }
     submitAppointment(time) {
         const date = this.props.match.params.date;
+        this.setState({submitting: true});
 
         let formData = new FormData(); 
         formData.append('doctor_id', this.state.doctor.id);
         formData.append('clinic_id', this.state.clinic.id);
+        formData.append('user_id', this.props.user.id);
         formData.append('appointment_type_id', this.state.appointment_type.id);
         formData.append('date', date);
         formData.append('time', time);
@@ -71,7 +74,9 @@ class SubmitAppointment extends Component {
                         <p>Trajanje odabranog pregleda: {this.state.appointment_type.duration}</p>
                         <p>Slobodni termini:</p>
                         <div>
-                            {appTimes}
+                            {this.state.submitting
+                                ? 'Zakazivanje u toku...'
+                                : appTimes}
                         </div>
                     </div>
                     : "Loading..."}

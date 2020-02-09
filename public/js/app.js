@@ -93770,7 +93770,9 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Home__WEBPACK_IMPORTED_MODULE_15__["default"], null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_PrivateRoute__WEBPACK_IMPORTED_MODULE_4__["default"], {
         isLoggedIn: this.state.isLoggedIn,
         path: "/appointment/:doctorId/:clinicId/:appTypeId/:date"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_appointments_SubmitAppointment__WEBPACK_IMPORTED_MODULE_13__["default"], null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_PrivateRoute__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_appointments_SubmitAppointment__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        user: this.state.user
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_auth_PrivateRoute__WEBPACK_IMPORTED_MODULE_4__["default"], {
         isLoggedIn: this.state.isLoggedIn,
         path: "/appointments"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_appointments_Appointments__WEBPACK_IMPORTED_MODULE_14__["default"], {
@@ -94396,7 +94398,8 @@ function (_Component) {
       appointment_type: {},
       availability: [],
       loaded: false,
-      isSubmitted: false
+      isSubmitted: false,
+      submitting: false
     };
     _this.submitAppointment = _this.submitAppointment.bind(_assertThisInitialized(_this));
     return _this;
@@ -94429,9 +94432,13 @@ function (_Component) {
       var _this3 = this;
 
       var date = this.props.match.params.date;
+      this.setState({
+        submitting: true
+      });
       var formData = new FormData();
       formData.append('doctor_id', this.state.doctor.id);
       formData.append('clinic_id', this.state.clinic.id);
+      formData.append('user_id', this.props.user.id);
       formData.append('appointment_type_id', this.state.appointment_type.id);
       formData.append('date', date);
       formData.append('time', time);
@@ -94460,7 +94467,7 @@ function (_Component) {
         className: "card shadow col-md-12 col-lg-8 mx-auto my-5 px-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Zakazivanje pregleda"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), this.state.doctor && this.state.clinic && this.state.appointment_type ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrani ljekar: ", this.state.doctor.first_name + ' ' + this.state.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrana klinika: ", this.state.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrani pregled: ", this.state.appointment_type.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Trajanje odabranog pregleda: ", this.state.appointment_type.duration), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Slobodni termini:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, appTimes)) : "Loading..."));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Zakazivanje pregleda"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), this.state.doctor && this.state.clinic && this.state.appointment_type ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrani ljekar: ", this.state.doctor.first_name + ' ' + this.state.doctor.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrana klinika: ", this.state.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Odabrani pregled: ", this.state.appointment_type.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Trajanje odabranog pregleda: ", this.state.appointment_type.duration), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Slobodni termini:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.submitting ? 'Zakazivanje u toku...' : appTimes)) : "Loading..."));
     }
   }]);
 
@@ -95137,6 +95144,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var react_star_ratings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-star-ratings */ "./node_modules/react-star-ratings/build/index.js");
+/* harmony import */ var react_star_ratings__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_star_ratings__WEBPACK_IMPORTED_MODULE_2__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -95154,6 +95163,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -95202,7 +95212,12 @@ function (_Component) {
         className: "card-title"
       }, this.props.clinic.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-text"
-      }, "Ocjena: ", this.props.clinic.rating), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Ocjena: ", this.props.clinic.rating, " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_star_ratings__WEBPACK_IMPORTED_MODULE_2___default.a, {
+        starDimension: "16px",
+        starSpacing: "1px",
+        starRatedColor: "red",
+        rating: this.props.clinic.rating
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-text"
       }, this.props.clinic.address), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-text"
@@ -95476,7 +95491,7 @@ function (_Component) {
     _this.filterDoctors = _this.filterDoctors.bind(_assertThisInitialized(_this));
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleSelect = _this.handleSelect.bind(_assertThisInitialized(_this));
-    _this.changeRating = _this.changeRating.bind(_assertThisInitialized(_this));
+    _this.handleChangeRating = _this.handleChangeRating.bind(_assertThisInitialized(_this));
     _this.handlePredefClick = _this.handlePredefClick.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -95534,14 +95549,17 @@ function (_Component) {
       }
     }
   }, {
-    key: "changeRating",
-    value: function changeRating(newRating, name) {
+    key: "handleChangeRating",
+    value: function handleChangeRating(newRating, name) {
       var _this4 = this;
 
       this.setState({
         currentRating: newRating
       });
-      axios.post('/api/clinics/' + this.state.clinic.id + '/rate', newRating).then(function (json) {
+      console.log(newRating);
+      axios.post('/api/clinics/' + this.state.clinic.id + '/rate', {
+        rating: newRating
+      }).then(function (json) {
         var clinic = _this4.state.clinic;
         clinic.rating = json.data;
 
@@ -95585,7 +95603,7 @@ function (_Component) {
       }), this.state.clinic.rating), this.state.clinic.canRate && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, " Ocijeni:", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_star_ratings__WEBPACK_IMPORTED_MODULE_4___default.a, {
         rating: this.state.currentRating,
         starRatedColor: "red",
-        changeRating: "this.changeRating",
+        changeRating: this.handleChangeRating,
         numberOfStars: 5,
         starDimension: "24px",
         starSpacing: "2px",

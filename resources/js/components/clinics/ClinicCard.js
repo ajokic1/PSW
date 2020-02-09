@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import StarRatings from 'react-star-ratings';
 
 export default class ClinicCard extends Component {
     render() {
@@ -17,7 +18,7 @@ export default class ClinicCard extends Component {
                     <div style={photoStyle} className="card-img-top"/>
                     <div className="card-body h-50">
                         <h5 className="card-title">{this.props.clinic.name}</h5>
-                        <div className="card-text">Ocjena: {this.props.clinic.rating}</div>
+                        <div className="card-text">Ocjena: {this.props.clinic.rating} <StarRatings starDimension='16px' starSpacing='1px' starRatedColor='red' rating={this.props.clinic.rating}/></div>
                         <div className="card-text">{this.props.clinic.address}</div>
                         <div className="card-text">{this.props.clinic.city}</div>
                     </div>

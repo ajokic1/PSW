@@ -10,7 +10,7 @@ class Doctor extends Model
     protected $guarded=[];
     protected $hidden=['created_at', 'updated_at'];
     protected $appends=['rating', 'appointment_types'];
-    
+
 
     public function appointment_types() {
         return $this->belongsToMany('App\AppointmentType');
@@ -47,6 +47,6 @@ class Doctor extends Model
             return $carry + $item->rating;
         });
         if($ratings->count() == 0) return 0;
-        return $sum_ratings / $ratings->count();
+        return round($sum_ratings / $ratings->count(),1);
     }
 }

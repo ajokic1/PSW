@@ -10,7 +10,7 @@ class Clinic extends Model
     protected $guarded=[];
     protected $hidden=['created_at', 'updated_at'];
     protected $appends=['rating'];
-    
+
 
     public function clinic_ratings() {
         return $this->hasMany('App\ClinicRating');
@@ -31,7 +31,7 @@ class Clinic extends Model
     public function getDoctorIdsAttribute() {
         return $this->doctors()->get(['doctor_id','works_from', 'works_to'])->makeHidden('pivot')->toArray();
     }
-    
+
     public function getAppointmentTypesAttribute() {
         $appointment_types = DB::table('appointment_type_doctor')
             ->whereIn('doctor_id', $this->doctor_ids)
@@ -54,6 +54,6 @@ class Clinic extends Model
             return $carry + $item->rating;
         });
         if($ratings->count()==0) return 0;
-        return $sum_ratings / $ratings->count();
+        return round($sum_ratings / $ratings->count(), 1);
     }
 }
